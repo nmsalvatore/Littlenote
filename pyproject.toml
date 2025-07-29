@@ -1,7 +1,7 @@
 [project]
-name = "lilnotes.app"
+name = "slipnest"
 version = "0.1.0"
-description = "Add your description here"
+description = "A web app for storing and publishing small notes (or slips) with an activity map to track daily writing."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
