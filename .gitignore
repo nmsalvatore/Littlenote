@@ -12,5 +12,10 @@ wheels/
 # Virtual environments
 .venv
 
+# Databases
+*.sqlite3
+*.sqlite
+*.db
+
 # Other
 .ropeproject
