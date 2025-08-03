@@ -29,7 +29,7 @@ USE_TZ = True
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [str(SRC_DIR / "templates")],
+        "DIRS": [SRC_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -78,7 +78,9 @@ THIRD_PARTY_APPS = [
     "allauth.account"
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "src.apps.pages"
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -128,4 +130,4 @@ AUTH_PASSWORD_VALIDATORS = [
 
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [str(SRC_DIR / "static")]
+STATICFILES_DIRS = [SRC_DIR / "static"]

@@ -8,6 +8,10 @@ dependencies = [
     "django>=5.2.4",
     "django-allauth>=65.10.0",
     "django-cotton>=2.1.3",
-    "django-tailwind>=4.2.0",
     "environs>=14.3.0",
+]
+
+[dependency-groups]
+dev = [
+    "selenium>=4.34.2",
 ]
