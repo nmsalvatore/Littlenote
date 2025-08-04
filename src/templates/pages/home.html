@@ -1,11 +1,29 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Lil' Notes | A place to publish bite-sized notes</title>
+	<link rel="stylesheet" href="{% static 'css/modern-normalize.css' %}">
+	<link rel="stylesheet" href="{% static 'css/little.css' %}">
+	<link rel="stylesheet" href="{% static 'css/home.css' %}">
+	<title>lil' notes | Reduce big ideas into lil' notes.</title>
 </head>
 <body>
-    <h1>wassup.</h1>
+    <header>
+        <a href="/" class="title">lil' notes</a>
+        <nav>
+            <a href="/">Log In</a>
+            <a href="/">Sign Up</a>
+        </nav>
+    </header>
+    <main>
+        <div class="hero">
+            <h1>Reduce big ideas into lil' notes.</h1>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem adipisci aut eaque quo, doloremque dolorem aliquam.</p>
+            <img src="{% static 'images/lilnote.png' %}" alt="A lil' line-drawn note character">
+        </div>
+    </main>
 </body>
 </html>
