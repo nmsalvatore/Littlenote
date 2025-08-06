@@ -1,0 +1,135 @@
+:root {
+    --bg: #f5f5f5;
+    --primary: #1e1e1e;
+    --secondary: #6d6d6d;
+    --link: #628476;
+    --accent: #aaa48a;
+
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 3rem;
+    --space-xl: 5rem;
+}
+
+html {
+    background: var(--bg);
+    color: var(--primary);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        segoe ui,
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        open sans,
+        helvetica neue,
+        sans-serif;
+    line-height: 1.5;
+    min-height: 100dvh;
+}
+
+body > header > nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: auto;
+    max-width: 1024px;
+    padding: var(--space-md) 0;
+    width: 100%;
+}
+
+body > header > nav menu {
+    list-style-type: none;
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+}
+
+body > main,
+body > footer {
+    margin: auto;
+    max-width: 720px;
+    width: 100%;
+}
+
+body > main {
+    margin: var(--space-lg) auto;
+}
+
+body > main:has(div.hero) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    flex: 1;
+}
+
+body > footer {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+}
+
+menu a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+menu a:hover {
+    text-decoration: underline;
+    text-underline-offset: 1px;
+    text-decoration-thickness: 2px;
+}
+
+p {
+    color: var(--secondary);
+}
+
+a {
+    color: var(--link);
+}
+
+a.title {
+    color: var(--link);
+    font-size: 24px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a.tryitout {
+    padding: var(--space-xs) var(--space-md);
+    background: var(--link);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--space-xs);
+}
+
+div.hero {
+    text-align: center;
+    margin-bottom: 120px;
+}
+
+div.hero > h1 {
+    margin-bottom: var(--space-xs);
+}
+
+div.hero p:has(+ a.tryitout) {
+    margin-bottom: var(--space-md);
+}

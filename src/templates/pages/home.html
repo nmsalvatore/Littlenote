@@ -6,24 +6,29 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'css/modern-normalize.css' %}">
-	<link rel="stylesheet" href="{% static 'css/little.css' %}">
-	<link rel="stylesheet" href="{% static 'css/home.css' %}">
-	<title>lil' notes | Turn big ideas into lil' notes.</title>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<title>note.boo</title>
 </head>
 <body>
     <header>
-        <a href="/" class="title">lil' notes</a>
         <nav>
-            <a href="/">Log In</a>
-            <a href="/">Sign Up</a>
+            <a href="/" class="title">note.boo</a>
+            <menu>
+                <li><a href="/">My Account</a></li>
+                <li><a href="/">Community Notes</a></li>
+                <li><a href="/">Settings</a></li>
+            </menu>
         </nav>
     </header>
     <main>
         <div class="hero">
-            <h1>Turn big ideas into lil' notes.</h1>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatem adipisci aut eaque quo, doloremque dolorem aliquam.</p>
-            <img src="{% static 'images/lilnote.png' %}" alt="A lil' line-drawn note character">
+            <h1>Turn big ideas into little notes.</h1>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officia accusantium, pariatur beatae ex autem possimus perspiciatis!</p>
+            <a href="/" class="tryitout">Try it out</a>
         </div>
     </main>
+    <footer>
+        <p>Created by Nicholas Salvatore, the original note boo.</p>
+    </footer>
 </body>
 </html>
