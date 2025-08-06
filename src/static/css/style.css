@@ -3,7 +3,7 @@
     --primary: #1e1e1e;
     --secondary: #6d6d6d;
     --link: #628476;
-    --accent: #aaa48a;
+    --accent: #c29f90;
 
     --space-xs: 0.5rem;
     --space-sm: 1rem;
@@ -113,7 +113,7 @@ a.title {
     text-decoration: none;
 }
 
-a.tryitout {
+a.cta-btn {
     padding: var(--space-xs) var(--space-md);
     background: var(--link);
     color: white;

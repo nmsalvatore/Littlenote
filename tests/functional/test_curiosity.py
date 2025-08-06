@@ -3,6 +3,7 @@
 from django.test import LiveServerTestCase
 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 
 class CuriousUserTest(LiveServerTestCase):
@@ -19,9 +20,13 @@ class CuriousUserTest(LiveServerTestCase):
 
     def test_curious_user_story(self):
         # George (because curious, of course) decides to check out the
-        # home page of lilnotes.app to see what all the fuss is about.
+        # Littlenote website to see what all the fuss is about.
         self.browser.get(self.live_server_url)
 
         # He checks the title of the page to make sure it looks like
-        # what he's looking for
+        # what he's looking for.
         self.assertIn("littlenote", self.browser.title.lower())
+
+        # He sees a call to action
+        cta_button = self.browser.find_element(By.CSS_SELECTOR, "a.cta-btn")
+        self.assertIn("sign up", cta_button.text.lower())
