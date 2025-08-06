@@ -48,8 +48,19 @@ body > header > nav {
 body > header > nav menu {
     list-style-type: none;
     display: flex;
-    gap: 1rem;
+    gap: var(--space-md);
     padding: 0;
+}
+
+body > header > nav menu a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+menu a:hover {
+    text-decoration: underline;
+    text-underline-offset: 1px;
+    text-decoration-thickness: 2px;
 }
 
 body > main,
@@ -87,17 +98,6 @@ h6 {
     font-weight: 700;
 }
 
-menu a {
-    color: var(--primary);
-    text-decoration: none;
-}
-
-menu a:hover {
-    text-decoration: underline;
-    text-underline-offset: 1px;
-    text-decoration-thickness: 2px;
-}
-
 p {
     color: var(--secondary);
 }
@@ -108,7 +108,7 @@ a {
 
 a.title {
     color: var(--link);
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
     text-decoration: none;
 }

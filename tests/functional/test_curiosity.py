@@ -24,4 +24,4 @@ class CuriousUserTest(LiveServerTestCase):
 
         # He checks the title of the page to make sure it looks like
         # what he's looking for
-        self.assertIn("note.boo", self.browser.title.lower())
+        self.assertIn("littlenote", self.browser.title.lower())
