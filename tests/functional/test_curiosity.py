@@ -30,3 +30,8 @@ class CuriousUserTest(LiveServerTestCase):
         # He sees a call to action
         cta_button = self.browser.find_element(By.CSS_SELECTOR, "a.cta-btn")
         self.assertIn("sign up", cta_button.text.lower())
+
+        # Being the curious boy George is, he looks around to see if
+        # he can see how Littlenote works before signing up.
+        nav_links = self.browser.find_elements(By.CSS_SELECTOR, "nav > menu a")
+        self.assertTrue(any([link.text == "How it works" for link in nav_links]))
