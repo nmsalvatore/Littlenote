@@ -10,3 +10,11 @@ from .base import env
 DEBUG = True
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 SECRET_KEY = env("DJANGO_SECRET_KEY", "shhh")
+
+
+# Email
+# ------------------------------------------------------------------------------
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@littlenote.local"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
