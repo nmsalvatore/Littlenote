@@ -1,0 +1,9 @@
+<form hx-post="/" hx-swap="outerHTML" id="continue_with_email_form">
+    {% csrf_token %}
+    <input type="email" name="email" value="{{ email }}" id="continue_with_email_input" disabled>
+    <div class="otp-container">
+        <small>A one-time passcode has been emailed to you.</small>
+        <input type="text" name="passcode" placeholder="Enter one-time passcode">
+    </div>
+    <button type="submit" id="continue_with_email_button">Verify passcode</button>
+</form>
