@@ -14,5 +14,3 @@ taking 10 minutes out of your day to sit down and reflect in writing.
 The project will use the following dependencies:
 
 - django-cotton
-- django-allauth
-- django-tailwind

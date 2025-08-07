@@ -73,10 +73,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "allauth",
-    "allauth.account"
-]
+THIRD_PARTY_APPS = []
 
 LOCAL_APPS = [
     "src.apps.pages"
@@ -98,9 +95,7 @@ DJANGO_MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-THIRD_PARTY_MIDDLEWARE = [
-    "allauth.account.middleware.AccountMiddleware"
-]
+THIRD_PARTY_MIDDLEWARE = []
 
 MIDDLEWARE = DJANGO_MIDDLEWARE + THIRD_PARTY_MIDDLEWARE
 
@@ -110,7 +105,6 @@ MIDDLEWARE = DJANGO_MIDDLEWARE + THIRD_PARTY_MIDDLEWARE
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend"
 ]
 
 
