@@ -1,4 +1,4 @@
-"Functional tests for user story #1"
+"Functional tests for a curious user."
 
 from django.test import LiveServerTestCase
 
@@ -18,7 +18,7 @@ class CuriousUserTest(LiveServerTestCase):
     def tearDown(self) -> None:
         self.browser.quit()
 
-    def test_curious_user_story(self):
+    def test_user_story(self):
         # George (because curious, of course) decides to check out the
         # Littlenote website to see what all the fuss is about.
         self.browser.get(self.live_server_url)
@@ -27,11 +27,21 @@ class CuriousUserTest(LiveServerTestCase):
         # what he's looking for.
         self.assertIn("littlenote", self.browser.title.lower())
 
-        # He sees a call to action
-        cta_button = self.browser.find_element(By.CSS_SELECTOR, "a.cta-btn")
-        self.assertIn("sign up", cta_button.text.lower())
+        # He sees a form where he can provide his email to presumably
+        # sign up or log in.
+        continue_with_email_button = self.browser.find_element(By.ID, "continue_with_email_button")
+        self.assertIn("continue", continue_with_email_button.text.lower())
 
         # Being the curious boy George is, he looks around to see if
-        # he can see how Littlenote works before signing up.
+        # he can get some more information before he commits to anything.
         nav_links = self.browser.find_elements(By.CSS_SELECTOR, "nav > menu a")
-        self.assertTrue(any([link.text == "How it works" for link in nav_links]))
+        nav_texts = [link.text.lower() for link in nav_links]
+        self.assertIn("what is littlenote?", nav_texts)
+
+        # Look at that! What is this? Exactly what George was thinking.
+        # He clicks on the link and is navigated to a section
+        # that explains what Littlenote is all about.
+        what_link = self.browser.find_element(By.XPATH, "//a[contains(text(),'What is Littlenote?')]")
+        what_link.click()
+
+        self.fail("Finish George's journey!")

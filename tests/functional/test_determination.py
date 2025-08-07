@@ -42,4 +42,4 @@ class DeterminedUserTest(LiveServerTestCase):
         # A new input is rendered that is requesting a one-time passcode
         self.wait.until(EC.visibility_of_element_located((By.XPATH, "//input[contains(@name,'code')]")))
 
-        self.fail("Finish the test!")
+        self.fail("Finish Danny's journey!")
