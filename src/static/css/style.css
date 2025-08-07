@@ -1,15 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+
 :root {
-    --bg: #f5f5f5;
-    --primary: #1e1e1e;
-    --secondary: #6d6d6d;
-    --link: #628476;
-    --accent: #c29f90;
+    --bg: #f4f4f2;
+    --primary: #382e2e;
+    --secondary: #6b6161;
+    --tertiary: #85adad;
+    --link: #4d5e80;
 
     --space-xs: 0.5rem;
     --space-sm: 1rem;
     --space-md: 2rem;
     --space-lg: 3rem;
     --space-xl: 5rem;
+
+    --line-height-default: 1.5;
+    --line-height-compact: 1.2;
 }
 
 html {
@@ -20,18 +25,8 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        segoe ui,
-        Roboto,
-        Oxygen,
-        Ubuntu,
-        Cantarell,
-        open sans,
-        helvetica neue,
-        sans-serif;
-    line-height: 1.5;
+    font-family: Nunito, sans-serif;
+    line-height: var(--line-height-default);
     min-height: 100dvh;
 }
 
@@ -95,7 +90,8 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 700;
+    font-weight: 600;
+    line-height: var(--line-height-compact);
 }
 
 p {
@@ -107,9 +103,9 @@ a {
 }
 
 a.title {
-    color: var(--link);
+    color: var(--primary);
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
 }
 
@@ -117,8 +113,10 @@ a.cta-btn {
     padding: var(--space-xs) var(--space-md);
     background: var(--link);
     color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px -6px var(--primary);
     text-decoration: none;
-    border-radius: var(--space-xs);
 }
 
 div.hero {
@@ -127,9 +125,56 @@ div.hero {
 }
 
 div.hero > h1 {
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--space-sm);
 }
 
-div.hero p:has(+ a.tryitout) {
+div.hero > h1 + p {
+    margin-top: 0;
+}
+
+div.hero p:has(+ form) {
     margin-bottom: var(--space-md);
+}
+
+div.hero form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin: auto;
+    max-width: 320px;
+}
+
+div.hero form input,
+div.hero form button {
+    border-radius: 8px;
+    font-size: inherit;
+    padding: 8px 12px;
+    line-height: var(--line-height-default);
+}
+
+div.hero form input {
+    border: 1px solid #d4d4d2;
+    width: 100%;
+}
+
+div.hero form input:focus {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+}
+
+div.hero form button {
+    border: none;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+}
+
+div.hero form .otp-container {
+    text-align: left;
+}
+
+div.hero form small {
+    color: var(--secondary);
+    display: block;
+    margin-bottom: var(--space-xs);
 }
