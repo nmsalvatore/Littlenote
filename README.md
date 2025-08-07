@@ -1,1 +1,1 @@
-# lilnotes.app
+# Littlenote

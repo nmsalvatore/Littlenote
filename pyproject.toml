@@ -1,7 +1,7 @@
 [project]
-name = "lilnotes"
+name = "Littlenote"
 version = "0.1.0"
-description = "A web app for storing and publishing lil' notes."
+description = "A public note-taking platform."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -12,6 +12,4 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "selenium>=4.34.2",
-]
+dev = ["selenium>=4.34.2"]
