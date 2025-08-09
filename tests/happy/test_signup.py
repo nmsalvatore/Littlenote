@@ -1,7 +1,6 @@
-"""Functional tests for a determined user."""
+"""Test sign-up flow for new user."""
 
 import re
-import time
 
 from django.core import mail
 from django.test import LiveServerTestCase, override_settings
@@ -13,14 +12,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
-class UserSignUpTest(LiveServerTestCase):
+class SignUpFlowTest(LiveServerTestCase):
     """
-    Testing suite of a successful user sign up.
-
-    Backstory:
-        Danny saw someone mention how Littlenote leveled-up their
-        learning 100x and is determined to get signed-up as soon as
-        possible.
+    Testing suite of a successful sign-up of a new user.
     """
 
     def setUp(self) -> None:
@@ -31,42 +25,45 @@ class UserSignUpTest(LiveServerTestCase):
         self.browser.quit()
 
     def test_user_story(self):
-        # He goes to the Littlenote homepage.
+        self.user_email = "testuser@example.com"
+
+        # User goes to the Littlenote home page.
         self.browser.get(self.live_server_url)
 
-        # He enters his email in the email input box.
+        # They enter their email in the email input box.
         email_input = self.browser.find_element(By.ID, "continue_with_email_input")
-        email_input.send_keys("danny@example.com")
+        email_input.send_keys(self.user_email)
 
-        # He clicks the button that reads "Continue with email"
+        # They click the button that reads "Continue with email"
         email_button = self.browser.find_element(By.ID, "continue_with_email_button")
         email_button.click()
 
-        # A new input is rendered that is requesting a one-time passcode.
+        # They wait for the passcode form to render.
         passcode_input = self.wait.until(EC.presence_of_element_located((By.NAME, "passcode")))
 
-        # He checks for a new email that says something about a passcode from Littlenote.
+        # They check for a new email from Littlenote that says
+        # something about a passcode.
         self.assertEqual(len(mail.outbox), 1)
         email_message = mail.outbox[0]
         self.assertIn("littlenote", email_message.from_email.lower())
         self.assertIn("passcode", email_message.subject.lower())
 
-        # He verifies that the passcode is included in the email and
-        # copies it.
+
+        # They verify that a passcode is in the email and copy it.
         passcode_match = re.search(r"Your one-time passcode is (\d{6})", email_message.subject)
         self.assertIsNotNone(passcode_match, "Passcode not found in email subject")
-        passcode = passcode_match.group(1)  # copy, beep boop beep
+        passcode = passcode_match.group(1)
 
-        # He enters the passcode into the form and clicks the sign up button
+        # They enter the passcode into the form and click the "Sign up" button.
         passcode_input.send_keys(passcode)
         signup_button = self.browser.find_element(By.ID, "signup_button")
         signup_button.click()
 
-        # He is redirected to the dashboard
+        # They are redirected to the dashboard.
         self.wait.until(EC.url_contains("/dashboard/"))
 
-        # He sees a welcome message
+        # They see a welcome message.
         self.assertIn("Welcome to Littlenote!", self.browser.page_source)
 
-        # He sees his email displayed on the dashboard
-        self.assertIn("danny@example.com", self.browser.page_source)
+        # They see their email displayed on the dashboard.
+        self.assertIn(self.user_email, self.browser.page_source)
