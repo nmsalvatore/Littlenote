@@ -30,34 +30,6 @@ body {
     min-height: 100dvh;
 }
 
-body > header > nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: auto;
-    max-width: 1024px;
-    padding: var(--space-md) 0;
-    width: 100%;
-}
-
-body > header > nav menu {
-    list-style-type: none;
-    display: flex;
-    gap: var(--space-md);
-    padding: 0;
-}
-
-body > header > nav menu a {
-    color: var(--primary);
-    text-decoration: none;
-}
-
-menu a:hover {
-    text-decoration: underline;
-    text-underline-offset: 1px;
-    text-decoration-thickness: 2px;
-}
-
 body > main,
 body > footer {
     margin: auto;
@@ -122,15 +94,20 @@ a.cta-btn {
 }
 
 div.hero {
-    margin-bottom: 120px;
     max-width: 320px;
+    position: relative;
     text-align: center;
     width: 100%;
 }
 
+div.hero img {
+    height: 100px;
+}
+
 div.hero > h1 {
     font-size: 2.5rem;
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
+    margin-top: var(--space-xs);
 }
 
 div.hero > h2 {
@@ -145,6 +122,10 @@ div.hero form {
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
+}
+
+div.hero form:has(+ ul.messages) {
+    margin-bottom: var(--space-sm);
 }
 
 div.hero form input,
@@ -180,4 +161,14 @@ div.hero form small {
     color: var(--secondary);
     display: block;
     margin-bottom: var(--space-xs);
+}
+
+ul.messages {
+    list-style-type: none;
+    background: rgba(0, 0, 0, 0.07);
+    padding: var(--space-sm);
+    width: 100%;
+    font-size: 80%;
+    border: 1px solid var(--tertiary);
+    color: var(--secondary);
 }

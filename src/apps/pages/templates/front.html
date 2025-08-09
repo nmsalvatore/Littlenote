@@ -11,19 +11,10 @@
 	<title>Littlenote</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="/" class="title">Littlenote</a>
-            <menu>
-                <li><a href="/what-is-this/">Tell me more</a></li>
-            </menu>
-        </nav>
-    </header>
     <main>
         <div class="hero">
-            <h1>Hello!</h1>
-
-            <h2>Let's write some notes.</h2>
+            <img src="{% static 'images/lilnote.png' %}" alt="Cute little note with arms and legs.">
+            <h1>Littlenote</h1>
 
             {% if passcode_sent %}
                 {% include 'partials/passcode_form.html' %}
