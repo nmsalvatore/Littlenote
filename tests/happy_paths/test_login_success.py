@@ -1,7 +1,8 @@
-"""Test sign-up flow for new user."""
+"""Test successful login for returning user."""
 
 import re
 
+from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import LiveServerTestCase, override_settings
 
@@ -11,10 +12,13 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+User = get_user_model()
+
+
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
-class SignUpFlowTest(LiveServerTestCase):
+class SuccessfulLoginTest(LiveServerTestCase):
     """
-    Testing suite of a successful sign-up of a new user.
+    Testing suite of a successful log in for a returning user.
     """
 
     def setUp(self) -> None:
@@ -26,6 +30,12 @@ class SignUpFlowTest(LiveServerTestCase):
 
     def test_user_story(self):
         self.user_email = "testuser@example.com"
+
+        # Create existing user.
+        User.objects.create_user(
+            username=self.user_email,
+            email=self.user_email
+        )
 
         # User goes to the Littlenote home page.
         self.browser.get(self.live_server_url)
@@ -48,22 +58,21 @@ class SignUpFlowTest(LiveServerTestCase):
         self.assertIn("littlenote", email_message.from_email.lower())
         self.assertIn("passcode", email_message.subject.lower())
 
-
         # They verify that a passcode is in the email and copy it.
         passcode_match = re.search(r"Your one-time passcode is (\d{6})", email_message.subject)
         self.assertIsNotNone(passcode_match, "Passcode not found in email subject")
         passcode = passcode_match.group(1)
 
-        # They enter the passcode into the form and click the "Sign up" button.
+        # They enter the passcode into the form and click the "Log in" button.
         passcode_input.send_keys(passcode)
-        signup_button = self.browser.find_element(By.ID, "signup_button")
-        signup_button.click()
+        login_button = self.browser.find_element(By.ID, "login_button")
+        login_button.click()
 
         # They are redirected to the dashboard.
         self.wait.until(EC.url_contains("/dashboard/"))
 
-        # They see a welcome message.
-        self.assertIn("Welcome to Littlenote!", self.browser.page_source)
+        # They should NOT see a welcome message.
+        self.assertNotIn("Welcome to Littlenote!", self.browser.page_source)
 
         # They see their email displayed on the dashboard.
         self.assertIn(self.user_email, self.browser.page_source)
