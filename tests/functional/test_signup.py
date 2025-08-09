@@ -61,3 +61,12 @@ class UserSignUpTest(LiveServerTestCase):
         passcode_input.send_keys(passcode)
         signup_button = self.browser.find_element(By.ID, "signup_button")
         signup_button.click()
+
+        # He is redirected to the dashboard
+        self.wait.until(EC.url_contains("/dashboard/"))
+
+        # He sees a welcome message
+        self.assertIn("Welcome to Littlenote!", self.browser.page_source)
+
+        # He sees his email displayed on the dashboard
+        self.assertIn("danny@example.com", self.browser.page_source)
