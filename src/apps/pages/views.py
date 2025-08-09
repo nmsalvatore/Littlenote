@@ -57,7 +57,7 @@ class FrontPageView(TemplateView):
             if saved_passcode != user_passcode:
                 messages.error(request, "Incorrect passcode. Please check your email.")
                 context = {"email": user_email}
-                return render_passcode_form(request)
+                return render_passcode_form(request, context)
 
             passcode_expired = time.perf_counter() > passcode_expiration
 
