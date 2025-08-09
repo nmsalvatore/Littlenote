@@ -1,0 +1,23 @@
+<form method="post" id="continue_with_email_form">
+    {% csrf_token %}
+    <input type="email" name="email" value="{{ email }}" id="continue_with_email_input" readonly required>
+    <div class="otp-container">
+        <small>A one-time passcode has been emailed to you.</small>
+        <input type="text" name="passcode" placeholder="Enter one-time passcode" autofocus required>
+    </div>
+    <button type="submit" id="continue_with_email_button">
+        {% if user_has_account %}
+            Log in with passcode
+        {% else %}
+            Sign up with passcode
+        {% endif %}
+    </button>
+</form>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

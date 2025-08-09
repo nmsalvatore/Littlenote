@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static 'css/modern-normalize.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<script src="{% static 'js/htmx.min.js' %}" defer></script>
+	<title>Littlenote</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="title">Littlenote</a>
+            <menu>
+                <li><a href="/what-is-this/">What is Littlenote?</a></li>
+            </menu>
+        </nav>
+    </header>
+    <main>
+        <div class="hero">
+            <h1>Not everything needs to be a blog post.</h1>
+
+            {% if passcode_sent %}
+                {% include 'partials/passcode_form.html' %}
+            {% else %}
+                {% include 'partials/email_form.html' %}
+            {% endif %}
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Littlenote.</p>
+    </footer>
+</body>
+</html>
