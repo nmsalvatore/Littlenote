@@ -19,3 +19,4 @@ wheels/
 
 # Other
 .ropeproject
+.DS_Store
