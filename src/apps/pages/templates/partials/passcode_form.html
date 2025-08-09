@@ -5,13 +5,12 @@
         <small>A one-time passcode has been emailed to you.</small>
         <input type="text" name="passcode" placeholder="Enter one-time passcode" autofocus required>
     </div>
-    <button type="submit" id="continue_with_email_button">
-        {% if user_has_account %}
-            Log in with passcode
-        {% else %}
-            Sign up with passcode
-        {% endif %}
-    </button>
+
+    {% if user_has_account %}
+        <button type="submit" id="login_button">Log in to Littlenote</button>
+    {% else %}
+        <button type="submit" id="signup_button">Create free Littlenote account</button>
+    {% endif %}
 </form>
 
 {% if messages %}
