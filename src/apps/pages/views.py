@@ -12,12 +12,8 @@ from django.views.generic import TemplateView
 User = get_user_model()
 
 
-def generate_passcode():
-    return f"{secrets.randbelow(900000) + 100000}"
-
-
-class HomeView(TemplateView):
-    template_name = "home.html"
+class FrontPageView(TemplateView):
+    template_name = "front.html"
 
     def post(self, request, *args, **kwargs):
         """
@@ -80,7 +76,14 @@ class HomeView(TemplateView):
                 if user_is_new:
                     messages.success(request, "Welcome to Littlenote!")
 
-                return redirect("dashboard")
+                return redirect("pages:dashboard")
+
+
+def generate_passcode():
+    """
+    Generate a random six-digit passcode.
+    """
+    return f"{secrets.randbelow(900000) + 100000}"
 
 
 def render_email_form(request, context={}):
@@ -91,7 +94,7 @@ def render_email_form(request, context={}):
     if request.headers.get("HX-Request"):
         template_name = "partials/email_form.html"
     else:
-        template_name = "home.html"
+        template_name = "front.html"
 
     context["passcode_sent"] = False
     return render(request, template_name, context)
@@ -105,7 +108,7 @@ def render_passcode_form(request, context={}):
     if request.headers.get("HX-Request"):
         template_name = "partials/passcode_form.html"
     else:
-        template_name = "home.html"
+        template_name = "front.html"
 
     context["passcode_sent"] = True
     return render(request, template_name, context)
