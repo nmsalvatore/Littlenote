@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 :root {
-    --bg: #f4f4f2;
+    --bg: #f3f3ed;
     --primary: #382e2e;
     --secondary: #6b6161;
     --tertiary: #85adad;
-    --link: #4d5e80;
+    --link: #47765f;
 
     --space-xs: 0.5rem;
     --space-sm: 1rem;
@@ -25,7 +25,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    font-family: Nunito, sans-serif;
+    font-family: "Open Sans", sans-serif;
     line-height: var(--line-height-default);
     min-height: 100dvh;
 }
@@ -90,6 +90,7 @@ h3,
 h4,
 h5,
 h6 {
+    font-family: Nunito, sans-serif;
     font-weight: 600;
     line-height: var(--line-height-compact);
 }
@@ -104,6 +105,7 @@ a {
 
 a.title {
     color: var(--primary);
+    font-family: Nunito, sans-serif;
     font-size: 20px;
     font-weight: 500;
     text-decoration: none;
@@ -120,28 +122,18 @@ a.cta-btn {
 }
 
 div.hero {
-    text-align: center;
     margin-bottom: 120px;
+    max-width: 320px;
 }
 
 div.hero > h1 {
-    margin-bottom: var(--space-sm);
-}
-
-div.hero > h1 + p {
-    margin-top: 0;
-}
-
-div.hero p:has(+ form) {
-    margin-bottom: var(--space-md);
+    font-size: 2.5rem;
 }
 
 div.hero form {
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
-    margin: auto;
-    max-width: 320px;
 }
 
 div.hero form input,
