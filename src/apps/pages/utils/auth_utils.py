@@ -10,9 +10,9 @@ from django.shortcuts import render
 
 def generate_passcode():
     """
-    Generate a random six-digit passcode.
+    Generate a random 8-digit passcode.
     """
-    return f"{secrets.randbelow(900000) + 100000}"
+    return f"{secrets.randbelow(90000000) + 10000000}"
 
 
 def render_email_form(request, context={}):
@@ -59,10 +59,12 @@ def set_passcode_session(request, email, code):
     """
     Set the passcode session data.
     """
+    PASSCODE_EXPIRATION_TIME = 300  # 5 minutes
+
     request.session["passcode"] = {
         "code": code,
         "email": email,
-        "expires_at": time.perf_counter() + 180,
+        "expires_at": time.perf_counter() + PASSCODE_EXPIRATION_TIME,
     }
 
 def delete_passcode_session_data(request):
