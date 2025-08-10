@@ -1,3 +1,5 @@
+"""Pages app views."""
+
 import time
 
 from django.contrib import messages
