@@ -99,11 +99,10 @@ class FrontPageView(TemplateView):
                 )
 
                 login(request, user)
-                auth_utils.delete_passcode_session_data(request)
-
                 if user_is_new:
                     messages.success(request, "Welcome to Littlenote!")
 
+                auth_utils.delete_passcode_session_data(request)
                 return redirect("pages:dashboard")
 
 
