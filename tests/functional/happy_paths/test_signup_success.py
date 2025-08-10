@@ -50,7 +50,7 @@ class SuccessfulSignUpTest(LiveServerTestCase):
 
 
         # They verify that a passcode is in the email and copy it.
-        passcode_match = re.search(r"Your one-time passcode is (\d{6})", email_message.subject)
+        passcode_match = re.search(r"Your one-time passcode is (\d{8})", email_message.subject)
         self.assertIsNotNone(passcode_match, "Passcode not found in email subject")
         passcode = passcode_match.group(1)
 
