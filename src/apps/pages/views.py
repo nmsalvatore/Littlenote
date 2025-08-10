@@ -4,6 +4,8 @@ import time
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
@@ -33,14 +35,16 @@ class FrontPageView(TemplateView):
             user_email = request.POST.get("email")
             user_passcode = request.POST.get("passcode")
 
-            if not user_email or "@" not in user_email:
-                messages.error(request, "Invalid email address. Please try again.")
+            try:
+                validate_email(user_email)
+            except ValidationError:
+                messages.error(request, "Enter a valid email address.")
                 return self._render_email_form(request)
 
-            elif user_email and not user_passcode:
+            if user_email and not user_passcode:
                 return self._handle_email_submission(request, user_email)
 
-            if user_email and user_passcode:
+            elif user_email and user_passcode:
                 return self._handle_passcode_submission(request, user_email, user_passcode)
 
         except Ratelimited:
