@@ -17,6 +17,9 @@ wheels/
 *.sqlite
 *.db
 
+# Ruff
+.ruff_cache
+
 # Other
 .ropeproject
 .DS_Store
