@@ -15,7 +15,10 @@ from selenium.webdriver.support import expected_conditions as EC
 User = get_user_model()
 
 
-@override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    RATELIMIT_ENABLE=False
+)
 class SuccessfulLoginTest(LiveServerTestCase):
     """
     Testing suite of a successful log in for a returning user.

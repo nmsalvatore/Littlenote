@@ -4,12 +4,14 @@ import time
 
 from django.contrib.auth import get_user, get_user_model
 from django.test import TestCase
+from django.test.utils import override_settings
 from django.urls.base import reverse
 
 
 User = get_user_model()
 
 
+@override_settings(RATELIMIT_ENABLE=False)
 class FailedLoginTest(TestCase):
     """
     Testing suite for user login errors.

@@ -11,7 +11,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-@override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    RATELIMIT_ENABLE=False
+)
 class SuccessfulSignUpTest(LiveServerTestCase):
     """
     Testing suite of a successful sign-up of a new user.
