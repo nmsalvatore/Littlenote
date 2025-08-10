@@ -1,6 +1,8 @@
 <form method="post" id="continue_with_email_form">
     {% csrf_token %}
-    <input type="email" name="email" value="{{ email }}" id="continue_with_email_input" readonly required>
+    <input type="email" value="{{ email }}" id="continue_with_email_input" disabled required>
+    <input type="hidden" name="email" value="{{ email }}">
+
     <div class="otp-container">
         <small>A one-time passcode has been emailed to you.</small>
         <input type="text" name="passcode" placeholder="Enter one-time passcode" autofocus required>
@@ -9,7 +11,7 @@
     {% if user_has_account %}
         <button type="submit" id="login_button">Log in</button>
     {% else %}
-        <button type="submit" id="signup_button">Create free account</button>
+        <button type="submit" id="signup_button">Create a free account</button>
     {% endif %}
 </form>
 
