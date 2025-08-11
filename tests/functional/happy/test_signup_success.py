@@ -10,6 +10,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from src.apps.pages.constants import SuccessMessages
+
 
 @override_settings(
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
@@ -66,7 +68,7 @@ class SuccessfulSignUpTest(LiveServerTestCase):
         self.wait.until(EC.url_contains("/dashboard/"))
 
         # They see a welcome message.
-        self.assertIn("Welcome to Littlenote!", self.browser.page_source)
+        self.assertIn(SuccessMessages.WELCOME_NEW_USER, self.browser.page_source)
 
         # They see their email displayed on the dashboard.
         self.assertIn(self.user_email, self.browser.page_source)

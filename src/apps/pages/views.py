@@ -1,6 +1,4 @@
-"""Pages app views."""
-
-import time
+"""Views for the pages app."""
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
@@ -12,6 +10,7 @@ from django.views.generic import TemplateView
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
+from .constants import AuthConfig, ErrorMessages, SuccessMessages, TemplatePaths
 from .utils import auth_utils
 
 
@@ -19,11 +18,11 @@ User = get_user_model()
 
 
 class FrontPageView(TemplateView):
-    template_name = "front.html"
+    template_name =  TemplatePaths.FRONT_PAGE
 
     @method_decorator(ratelimit(
         key="ip",
-        rate="15/m",
+        rate=AuthConfig.GENERAL_RATE_LIMIT,
         method="POST",
         block=True
     ))
@@ -38,7 +37,7 @@ class FrontPageView(TemplateView):
             try:
                 validate_email(user_email)
             except ValidationError:
-                messages.error(request, "Enter a valid email address.")
+                messages.error(request, ErrorMessages.INVALID_EMAIL)
                 return self._render_email_form(request)
 
             if user_email and not user_passcode:
@@ -48,13 +47,13 @@ class FrontPageView(TemplateView):
                 return self._handle_passcode_submission(request, user_email, user_passcode)
 
         except Ratelimited:
-            messages.error(request, "Too many login attempts. Please wait a moment before trying again.")
+            messages.error(request, ErrorMessages.TOO_MANY_LOGIN_ATTEMPTS)
             return self._render_email_form(request)
 
 
     @method_decorator(ratelimit(
         key="post:email",
-        rate="3/h",
+        rate=AuthConfig.EMAIL_REQUEST_RATE_LIMIT,
         method="POST",
         block=True
     ))
@@ -74,13 +73,13 @@ class FrontPageView(TemplateView):
             return self._render_passcode_form(request, context)
 
         except Ratelimited:
-            messages.error(request, "Too many email submissions. Please wait a moment before trying again.")
+            messages.error(request, ErrorMessages.TOO_MANY_EMAIL_REQUESTS)
             return self._render_email_form(request)
 
 
     @method_decorator(ratelimit(
         key="post:email",
-        rate="5/m",
+        rate=AuthConfig.PASSCODE_ATTEMPT_RATE_LIMIT,
         method="POST",
         block=True
     ))
@@ -102,13 +101,14 @@ class FrontPageView(TemplateView):
             )
 
             login(request, user)
+
             auth_utils.delete_passcode_session_data(request)
             self._welcome_new_user(request, user_is_new)
 
             return redirect("pages:dashboard")
 
         except Ratelimited:
-            messages.error(request, "Too many passcode attempts. Please wait a moment before trying again.")
+            messages.error(request, ErrorMessages.TOO_MANY_PASSCODE_ATTEMPTS)
             context = {"email": user_email}
             return self._render_passcode_form(request, context)
 
@@ -117,7 +117,7 @@ class FrontPageView(TemplateView):
         Welcome new users with a little welcome message.
         """
         if user_is_new:
-            messages.success(request, "Welcome to Littlenote!")
+            messages.success(request, SuccessMessages.WELCOME_NEW_USER)
 
     def _handle_form_reset(self, request, should_reset, user_email):
         """
@@ -127,7 +127,6 @@ class FrontPageView(TemplateView):
             auth_utils.delete_passcode_session_data(request)
             return self._render_email_form(request)
         else:
-            # Clear the passcode form.
             context = {"email": user_email}
             return self._render_passcode_form(request, context)
 
@@ -137,9 +136,9 @@ class FrontPageView(TemplateView):
         an HX-Request header.
         """
         if request.headers.get("HX-Request"):
-            template_name = "partials/email_form.html"
+            template_name = TemplatePaths.EMAIL_FORM
         else:
-            template_name = "front.html"
+            template_name = TemplatePaths.FRONT_PAGE
 
         context["passcode_sent"] = False
         return render(request, template_name, context)
@@ -151,13 +150,13 @@ class FrontPageView(TemplateView):
         includes an HX-Request header.
         """
         if request.headers.get("HX-Request"):
-            template_name = "partials/passcode_form.html"
+            template_name = TemplatePaths.PASSCODE_FORM
         else:
-            template_name = "front.html"
+            template_name = TemplatePaths.FRONT_PAGE
 
         context["passcode_sent"] = True
         return render(request, template_name, context)
 
 
 class DashboardView(TemplateView):
-    template_name = "pages/dashboard.html"
+    template_name = TemplatePaths.DASHBOARD

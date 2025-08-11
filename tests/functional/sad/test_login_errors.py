@@ -7,6 +7,8 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls.base import reverse
 
+from src.apps.pages.constants import AuthSessionKeys, ErrorMessages, SuccessMessages
+
 
 User = get_user_model()
 
@@ -28,8 +30,8 @@ class FailedLoginTest(TestCase):
         })
 
         # Get the correct passcode.
-        passcode_data = self.client.session["passcode"]
-        correct_passcode = passcode_data["code"]
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        correct_passcode = passcode_data[AuthSessionKeys.PASSCODE_CODE]
 
         # Submit the wrong passcode.
         wrong_passcode = self._generate_wrong_passcode(correct_passcode)
@@ -39,7 +41,7 @@ class FailedLoginTest(TestCase):
         })
 
         # User should see error message.
-        self.assertContains(response, "Incorrect passcode")
+        self.assertContains(response, ErrorMessages.INCORRECT_PASSCODE)
 
         # User email should still be in email input.
         self.assertContains(response, self.user_email)
@@ -52,7 +54,7 @@ class FailedLoginTest(TestCase):
         self.assertFalse(user.is_authenticated)
 
         # Session data should persist.
-        self.assertNotEqual(self.client.session.get("passcode"), None)
+        self.assertNotEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_correct_passcode_after_wrong_passcode(self):
         # Submit user email address.
@@ -61,8 +63,8 @@ class FailedLoginTest(TestCase):
         })
 
         # Get the correct passcode.
-        passcode_data = self.client.session["passcode"]
-        correct_passcode = passcode_data["code"]
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        correct_passcode = passcode_data[AuthSessionKeys.PASSCODE_CODE]
 
         # Submit the wrong passcode.
         wrong_passcode = self._generate_wrong_passcode(correct_passcode)
@@ -86,10 +88,10 @@ class FailedLoginTest(TestCase):
         self.assertTrue(user.is_authenticated)
 
         # User should see welcome message.
-        self.assertContains(response, "Welcome to Littlenote!")
+        self.assertContains(response, SuccessMessages.WELCOME_NEW_USER)
 
         # Session data should be removed.
-        self.assertEqual(self.client.session.get("passcode"), None)
+        self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_expired_passcode(self):
         # Submit user email address.
@@ -98,16 +100,16 @@ class FailedLoginTest(TestCase):
         })
 
         # Manually expire the passcode
-        passcode_data = self.client.session["passcode"]
-        passcode_data["expires_at"] = time.perf_counter() - 10
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        passcode_data[AuthSessionKeys.PASSCODE_EXPIRATION] = time.perf_counter() - 10
 
         # Save session data
         session = self.client.session
-        session["passcode"] = passcode_data
+        session[AuthSessionKeys.PASSCODE] = passcode_data
         session.save()
 
         # Get the correct passcode
-        correct_passcode = passcode_data.get("code")
+        correct_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
 
         # Submit the correct passcode.
         response = self.client.post(self.front_page_url, {
@@ -116,7 +118,7 @@ class FailedLoginTest(TestCase):
         })
 
         # User should see error message.
-        self.assertContains(response, "Passcode has expired")
+        self.assertContains(response, ErrorMessages.EXPIRED_PASSCODE)
 
         # User should still be on same page.
         self.assertEqual(response.status_code, 200)
@@ -126,7 +128,7 @@ class FailedLoginTest(TestCase):
         self.assertFalse(user.is_authenticated)
 
         # Session data should be removed.
-        self.assertEqual(self.client.session.get("passcode"), None)
+        self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_expired_session(self):
         # Submit user email address.
@@ -135,12 +137,12 @@ class FailedLoginTest(TestCase):
         })
 
         # Get the correct passcode.
-        passcode_data = self.client.session["passcode"]
-        correct_passcode = passcode_data.get("code")
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        correct_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
 
         # Manually expire the session data and save.
         session = self.client.session
-        del session["passcode"]
+        del session[AuthSessionKeys.PASSCODE]
         session.save()
 
         # Submit the correct passcode.
@@ -150,7 +152,7 @@ class FailedLoginTest(TestCase):
         })
 
         # User should see error message.
-        self.assertContains(response, "Session has expired")
+        self.assertContains(response, ErrorMessages.EXPIRED_SESSION)
 
         # User should still be on same page.
         self.assertEqual(response.status_code, 200)
@@ -160,7 +162,7 @@ class FailedLoginTest(TestCase):
         self.assertFalse(user.is_authenticated)
 
         # Session data should be removed.
-        self.assertEqual(self.client.session.get("passcode"), None)
+        self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_wrong_email(self):
         # Submit user email address.
@@ -169,8 +171,8 @@ class FailedLoginTest(TestCase):
         })
 
         # Get the correct passcode.
-        passcode_data = self.client.session["passcode"]
-        correct_passcode = passcode_data.get("code")
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        correct_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
 
         # Submit the correct passcode.
         response = self.client.post(self.front_page_url, {
@@ -179,7 +181,7 @@ class FailedLoginTest(TestCase):
         })
 
         # User should see error message.
-        self.assertContains(response, "Invalid email address")
+        self.assertContains(response, ErrorMessages.INCORRECT_EMAIL)
 
         # User should still be on same page.
         self.assertEqual(response.status_code, 200)
@@ -189,7 +191,7 @@ class FailedLoginTest(TestCase):
         self.assertFalse(user.is_authenticated)
 
         # Session data should be removed.
-        self.assertEqual(self.client.session.get("passcode"), None)
+        self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def _generate_wrong_passcode(self, passcode):
         """
