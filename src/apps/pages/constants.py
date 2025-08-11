@@ -28,7 +28,7 @@ class AuthSessionKeys:
 
 class EmailTemplates:
     """
-    Email message constants.
+    Email template constants.
     """
     SUBJECT = "Your one-time passcode is {passcode}."
     EMAIL = "Here is your one-time passcode for Littlenote: {passcode}"
