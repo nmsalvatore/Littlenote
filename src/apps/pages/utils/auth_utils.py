@@ -15,7 +15,6 @@ def generate_passcode():
     """
     return f"{secrets.randbelow(90000000) + AuthConfig.PASSCODE_MIN_VALUE}"
 
-
 def send_passcode_email(email, passcode):
     """
     Send email containing the one-time passcode for login.
@@ -58,7 +57,7 @@ def validate_passcode_session(request, user_email, user_passcode):
     saved_email = passcode_data.get(AuthSessionKeys.PASSCODE_EMAIL)
     passcode_expiration = passcode_data.get(AuthSessionKeys.PASSCODE_EXPIRATION)
 
-    if not any([saved_passcode, saved_email, passcode_expiration]):
+    if not all([saved_passcode, saved_email, passcode_expiration]):
         return False, ErrorMessages.INVALID_SESSION, True
 
     if saved_email != user_email:
@@ -67,7 +66,7 @@ def validate_passcode_session(request, user_email, user_passcode):
     if saved_passcode != user_passcode:
         return False, ErrorMessages.INCORRECT_PASSCODE, False
 
-    if time.perf_counter() > passcode_expiration:
+    if time.perf_counter() >= passcode_expiration:
         return False, ErrorMessages.EXPIRED_PASSCODE, True
 
     return True, None, False
