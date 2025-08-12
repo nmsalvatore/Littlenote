@@ -9,6 +9,13 @@ from django.core.mail import send_mail
 from ..constants import AuthSessionKeys, EmailTemplates, ErrorMessages, AuthConfig
 
 
+def normalize_email(email):
+    """
+    Normalize email address by setting to lowercase and removing
+    whitespace.
+    """
+    return email.lower().strip()
+
 def generate_passcode():
     """
     Generate a random 8-digit passcode.

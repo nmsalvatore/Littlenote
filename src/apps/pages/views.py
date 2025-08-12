@@ -11,7 +11,14 @@ from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
 from .constants import AuthConfig, ErrorMessages, SuccessMessages, TemplatePaths
-from .utils import auth_utils
+from .utils.auth_utils import (
+    delete_passcode_session_data,
+    generate_passcode,
+    normalize_email,
+    set_passcode_session,
+    send_passcode_email,
+    validate_passcode_session
+)
 
 
 User = get_user_model()
@@ -31,7 +38,7 @@ class FrontPageView(TemplateView):
         Handle POST requests from the home page.
         """
         try:
-            user_email = request.POST.get("email")
+            user_email = normalize_email(request.POST.get("email"))
             user_passcode = request.POST.get("passcode")
 
             try:
@@ -66,9 +73,9 @@ class FrontPageView(TemplateView):
             user = User.objects.filter(email=user_email)
             context["user_has_account"] = user.exists()
 
-            passcode = auth_utils.generate_passcode()
-            auth_utils.set_passcode_session(request, user_email, passcode)
-            auth_utils.send_passcode_email(user_email, passcode)
+            passcode = generate_passcode()
+            set_passcode_session(request, user_email, passcode)
+            send_passcode_email(user_email, passcode)
 
             return self._render_passcode_form(request, context)
 
@@ -89,7 +96,7 @@ class FrontPageView(TemplateView):
         """
         try:
             is_valid, message, should_reset = (
-                auth_utils.validate_passcode_session(request, user_email, user_passcode)
+                validate_passcode_session(request, user_email, user_passcode)
             )
 
             if not is_valid:
@@ -102,7 +109,7 @@ class FrontPageView(TemplateView):
 
             login(request, user)
 
-            auth_utils.delete_passcode_session_data(request)
+            delete_passcode_session_data(request)
             self._welcome_new_user(request, user_is_new)
 
             return redirect("pages:dashboard")
@@ -124,7 +131,7 @@ class FrontPageView(TemplateView):
         Handle form reset when passcode session data is invalid.
         """
         if should_reset:
-            auth_utils.delete_passcode_session_data(request)
+            delete_passcode_session_data(request)
             return self._render_email_form(request)
         else:
             context = {"email": user_email}

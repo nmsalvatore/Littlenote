@@ -11,10 +11,41 @@ from src.apps.pages.constants import AuthSessionKeys, ErrorMessages
 from src.apps.pages.utils.auth_utils import (
     delete_passcode_session_data,
     generate_passcode,
+    normalize_email,
     send_passcode_email,
     set_passcode_session,
     validate_passcode_session
 )
+
+
+class NormalizeEmailTest(SimpleTestCase):
+    """
+    Unit tests for the normalize_email function.
+    """
+    def setUp(self):
+        self.normalized_email = "testuser@example.com"
+
+    def test_returns_lowercase(self):
+        """
+        Test that all-caps email is returned in lowercase.
+        """
+        email = normalize_email("TESTUSER@EXAMPLE.COM")
+        self.assertEqual(email, self.normalized_email)
+
+    def test_removes_whitespace(self):
+        """
+        Test that whitespace padded email is stripped of whitespace.
+        """
+        email = normalize_email("    testuser@example.com    ")
+        self.assertEqual(email, self.normalized_email)
+
+    def test_returns_lowercase_and_removes_whitespace(self):
+        """
+        Test that all-caps email also padded with whitespace is
+        stripped of whitespace and returned in lowercase.
+        """
+        email = normalize_email("    TESTUSER@EXAMPLE.COM    ")
+        self.assertEqual(email, self.normalized_email)
 
 
 class GeneratePasscodeTest(SimpleTestCase):
