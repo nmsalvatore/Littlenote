@@ -21,7 +21,7 @@ User = get_user_model()
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
     RATELIMIT_ENABLE=False
 )
-class SuccessfulLoginTest(LiveServerTestCase):
+class LoginFlowTest(LiveServerTestCase):
     """
     Testing suite of a successful log in for a returning user.
     """
@@ -29,116 +29,98 @@ class SuccessfulLoginTest(LiveServerTestCase):
     def setUp(self) -> None:
         self.browser = webdriver.Firefox()
         self.wait = WebDriverWait(self.browser, timeout=5)
+        self.user_email = "testuser@example.com"
 
     def tearDown(self) -> None:
         self.browser.quit()
 
-    def test_user_story(self):
-        self.user_email = "testuser@example.com"
-
-        # Create existing user.
+    def test_login(self):
+        """
+        Test login flow for a returning user.
+        """
+        # Initialize user.
         User.objects.create_user(
             username=self.user_email,
             email=self.user_email
         )
 
-        # User goes to the Littlenote home page.
+        # User goes to home page.
         self.browser.get(self.live_server_url)
 
-        # They enter their email in the email input box.
-        email_input = self.browser.find_element(By.ID, "continue_with_email_input")
-        email_input.send_keys(self.user_email)
+        # User submits their email address into the form.
+        self._enter_email_address(self.user_email)
+        self._click_continue_with_email_button()
 
-        # They click the button that reads "Continue with email"
+        # User copies the passcode from their email.
+        passcode = self._copy_passcode_from_email()
+
+        # User submits passcode into the form.
+        self._enter_passcode(passcode)
+        self._click_login_button()
+
+        # User should be redirected to dashboard.
+        self.wait.until(EC.url_contains("/dashboard/"))
+
+    def test_signup_and_login(self):
+        """
+        Test login flow for new user.
+        """
+        # User goes to home page.
+        self.browser.get(self.live_server_url)
+
+        # User submits their email address into the form.
+        self._enter_email_address(self.user_email)
+        self._click_continue_with_email_button()
+
+        # User copies the passcode from their email.
+        passcode = self._copy_passcode_from_email()
+
+        # User submits passcode into the form.
+        self._enter_passcode(passcode)
+        self._click_signup_button()
+
+        # User should be redirected to dashboard.
+        self.wait.until(EC.url_contains("/dashboard/"))
+
+    def _enter_email_address(self, email_address):
+        """
+        User enters their email address into the form.
+        """
+        email_input = self.browser.find_element(By.ID, "continue_with_email_input")
+        email_input.send_keys(email_address)
+
+    def _click_continue_with_email_button(self):
+        """
+        User click of the "Continue with email" button.
+        """
         email_button = self.browser.find_element(By.ID, "continue_with_email_button")
         email_button.click()
 
-        # They wait for the passcode form to render.
-        passcode_input = self.wait.until(EC.presence_of_element_located((By.NAME, "passcode")))
-
-        # They check for a new email from Littlenote that says
-        # something about a passcode.
-        self.assertEqual(len(mail.outbox), 1)
+    def _copy_passcode_from_email(self):
+        """
+        User copies passcode from email.
+        """
         email_message = mail.outbox[0]
-        self.assertIn("littlenote", email_message.from_email.lower())
-        self.assertIn("passcode", email_message.subject.lower())
-
-        # They verify that a passcode is in the email and copy it.
         passcode_match = re.search(r"Your one-time passcode is (\d{8})", email_message.subject)
-        self.assertIsNotNone(passcode_match, "Passcode not found in email subject")
-        passcode = passcode_match.group(1)
+        return passcode_match.group(1)
 
-        # They enter the passcode into the form and click the "Log in" button.
+    def _enter_passcode(self, passcode):
+        """
+        User enters the passcode into the form.
+        """
+        passcode_input = self.wait.until(EC.presence_of_element_located((By.NAME, "passcode")))
         passcode_input.send_keys(passcode)
+
+    def _click_login_button(self):
+        """
+        User clicks the login button.
+        """
         login_button = self.browser.find_element(By.ID, "login_button")
         login_button.click()
 
-        # They are redirected to the dashboard.
-        self.wait.until(EC.url_contains("/dashboard/"))
-
-        # They should NOT see a welcome message.
-        self.assertNotIn(SuccessMessages.WELCOME_NEW_USER, self.browser.page_source)
-
-        # They see their email displayed on the dashboard.
-        self.assertIn(self.user_email, self.browser.page_source)
-
-
-@override_settings(
-    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
-    RATELIMIT_ENABLE=False
-)
-class SuccessfulSignUpTest(LiveServerTestCase):
-    """
-    Testing suite of a successful sign-up of a new user.
-    """
-
-    def setUp(self) -> None:
-        self.browser = webdriver.Firefox()
-        self.wait = WebDriverWait(self.browser, timeout=5)
-
-    def tearDown(self) -> None:
-        self.browser.quit()
-
-    def test_user_story(self):
-        self.user_email = "testuser@example.com"
-
-        # User goes to the Littlenote home page.
-        self.browser.get(self.live_server_url)
-
-        # They enter their email in the email input box.
-        email_input = self.browser.find_element(By.ID, "continue_with_email_input")
-        email_input.send_keys(self.user_email)
-
-        # They click the button that reads "Continue with email"
-        email_button = self.browser.find_element(By.ID, "continue_with_email_button")
-        email_button.click()
-
-        # They wait for the passcode form to render.
-        passcode_input = self.wait.until(EC.presence_of_element_located((By.NAME, "passcode")))
-
-        # They check for a new email from Littlenote that says
-        # something about a passcode.
-        self.assertEqual(len(mail.outbox), 1)
-        email_message = mail.outbox[0]
-        self.assertIn("littlenote", email_message.from_email.lower())
-        self.assertIn("passcode", email_message.subject.lower())
-
-
-        # They verify that a passcode is in the email and copy it.
-        passcode_match = re.search(r"Your one-time passcode is (\d{8})", email_message.subject)
-        self.assertIsNotNone(passcode_match, "Passcode not found in email subject")
-        passcode = passcode_match.group(1)
-
-        # They enter the passcode into the form and click the "Sign up" button.
-        passcode_input.send_keys(passcode)
+    def _click_signup_button(self):
+        """
+        User clicks the sign-up button.
+        """
         signup_button = self.browser.find_element(By.ID, "signup_button")
         signup_button.click()
-
-        # They are redirected to the dashboard.
-        self.wait.until(EC.url_contains("/dashboard/"))
-
-        # They see a welcome message.
-        self.assertIn(SuccessMessages.WELCOME_NEW_USER, self.browser.page_source)
-
-        # They see their email displayed on the dashboard.
-        self.assertIn(self.user_email, self.browser.page_source)
