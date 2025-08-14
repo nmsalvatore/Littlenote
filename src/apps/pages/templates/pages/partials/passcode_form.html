@@ -1,4 +1,4 @@
-<form method="post" id="continue_with_email_form">
+<form method="post" hx-post="/" hx-swap="outerHTML" id="continue_with_email_form">
     {% csrf_token %}
     <input type="email" value="{{ email }}" id="continue_with_email_input" disabled required>
     <input type="hidden" name="email" value="{{ email }}">

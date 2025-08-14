@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
@@ -111,6 +112,11 @@ class FrontPageView(TemplateView):
 
             delete_passcode_session_data(request)
             self._welcome_new_user(request, user_is_new)
+
+            if request.headers.get("HX-Request"):
+                response = HttpResponse()
+                response["HX-Redirect"] = "/dashboard/"
+                return response
 
             return redirect("pages:dashboard")
 
