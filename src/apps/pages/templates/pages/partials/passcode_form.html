@@ -3,9 +3,9 @@
     <input type="email" value="{{ email }}" id="continue_with_email_input" disabled required>
     <input type="hidden" name="email" value="{{ email }}">
 
-    <div class="otp-container">
+    <div class="passcode-container">
         <small>A one-time passcode has been emailed to you.</small>
-        <input type="text" name="passcode" placeholder="Enter one-time passcode" autofocus required>
+        <input type="text" name="passcode" placeholder="Enter one-time passcode" id="passcode_input" autofocus required>
     </div>
 
     {% if user_has_account %}
