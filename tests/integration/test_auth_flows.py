@@ -13,8 +13,72 @@ from src.apps.pages.constants import AuthSessionKeys, ErrorMessages
 User = get_user_model()
 
 
+class AuthTestCase(TestCase):
+    """
+    Extended TestCase class that includes helper functions for auth
+    flow integration tests.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.front_page_url = reverse("pages:front")
+        return super().__init__(*args, *kwargs)
+
+    def _submit_email(self, email):
+        """
+        Submit the user email to the form.
+        """
+        return self.client.post(self.front_page_url, {
+            "email": email
+        })
+
+    def _get_correct_passcode(self):
+        """
+        Get the correct passcode from the session data.
+        """
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        return passcode_data[AuthSessionKeys.PASSCODE_CODE]
+
+    def _generate_incorrect_passcode(self):
+        """
+        Generate a purposefully incorrect passcode by flipping the last
+        digit of the correct passcode.
+        """
+        passcode = self._get_correct_passcode()
+        return passcode[:-1] + "0" if passcode[-1] != "0" else "1"
+
+    def _submit_passcode(self, email, passcode):
+        """
+        Submit the passcode to the form.
+        """
+        return self.client.post(self.front_page_url, {
+            "email": email,
+            "passcode": passcode
+        })
+
+    def _expire_passcode(self):
+        """
+        Force passcode expiration by setting PASSCODE_EXPIRATION to
+        10 seconds in the past.
+        """
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        passcode_data[AuthSessionKeys.PASSCODE_EXPIRATION] = time.perf_counter() - 10
+
+        session = self.client.session
+        session[AuthSessionKeys.PASSCODE] = passcode_data
+        session.save()
+
+    def _expire_session(self):
+        """
+        Force session to expire my deleting the passcode key from the
+        session data.
+        """
+        session = self.client.session
+        del session[AuthSessionKeys.PASSCODE]
+        session.save()
+
+
 @override_settings(RATELIMIT_ENABLE=False)
-class PasscodeErrorTest(TestCase):
+class PasscodeErrorTest(AuthTestCase):
     """
     Integration tests for error cases involving passcode.
     """
@@ -22,7 +86,7 @@ class PasscodeErrorTest(TestCase):
     def setUp(self):
         self.user_email = "testuser@example.com"
         self.imposter_email = "sketchyguy@example.com"
-        self.front_page_url = reverse("pages:front")
+
 
     def test_incorrect_passcode_shows_error_message(self):
         """
@@ -211,55 +275,19 @@ class PasscodeErrorTest(TestCase):
 
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
-    def _submit_email(self, email):
-        """
-        Submit the user email to the form.
-        """
-        return self.client.post(self.front_page_url, {
-            "email": email
-        })
 
-    def _get_correct_passcode(self):
-        """
-        Get the correct passcode from the session data.
-        """
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        return passcode_data[AuthSessionKeys.PASSCODE_CODE]
+@override_settings(RATELIMIT_ENABLE=False)
+class InvalidEmailTest(AuthTestCase):
+    """
+    Integration tests for invalid email submissions.
+    """
 
-    def _generate_incorrect_passcode(self):
+    def test_invalid_email_shows_error_message(self):
         """
-        Generate a purposefully incorrect passcode by flipping the last
-        digit of the correct passcode.
+        Test that submission of invalid email address keeps the user
+        on the same page and shows an error message.
         """
-        passcode = self._get_correct_passcode()
-        return passcode[:-1] + "0" if passcode[-1] != "0" else "1"
+        response = self._submit_email("notanemail")
 
-    def _submit_passcode(self, email, passcode):
-        """
-        Submit the passcode to the form.
-        """
-        return self.client.post(self.front_page_url, {
-            "email": email,
-            "passcode": passcode
-        })
-
-    def _expire_passcode(self):
-        """
-        Force passcode expiration by setting PASSCODE_EXPIRATION to
-        10 seconds in the past.
-        """
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        passcode_data[AuthSessionKeys.PASSCODE_EXPIRATION] = time.perf_counter() - 10
-
-        session = self.client.session
-        session[AuthSessionKeys.PASSCODE] = passcode_data
-        session.save()
-
-    def _expire_session(self):
-        """
-        Force session to expire my deleting the passcode key from the
-        session data.
-        """
-        session = self.client.session
-        del session[AuthSessionKeys.PASSCODE]
-        session.save()
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, ErrorMessages.INVALID_EMAIL)
