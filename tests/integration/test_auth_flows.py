@@ -78,27 +78,45 @@ class AuthTestCase(TestCase):
 
 
 @override_settings(RATELIMIT_ENABLE=False)
-class PasscodeErrorTest(AuthTestCase):
+class AuthPasscodeTest(AuthTestCase):
     """
-    Integration tests for error cases involving passcode.
+    Integration tests for passcode submission in auth flow.
     """
 
     def setUp(self):
         self.user_email = "testuser@example.com"
         self.imposter_email = "sketchyguy@example.com"
 
+        # Submit email to navigate to the passcode form.
+        self._submit_email(self.user_email)
+
+    def test_correct_passcode_creates_new_user(self):
+        """
+        Test that submission of correct passcode creates a new user,
+        if user doesn't already exist.
+        """
+        passcode = self._get_correct_passcode()
+        self._submit_passcode(self.user_email, passcode)
+        user = User.objects.filter(email=self.user_email)
+        self.assertTrue(user.exists())
+
+    def test_incorrect_passcode_does_not_create_new_user(self):
+        """
+        Test that submission of incorrect passcode does not create a
+        new user.
+        """
+        passcode = self._generate_incorrect_passcode()
+        self._submit_passcode(self.user_email, passcode)
+        user = User.objects.filter(email=self.user_email)
+        self.assertFalse(user.exists())
 
     def test_incorrect_passcode_shows_error_message(self):
         """
         Test that submitting an incorrect passcode keeps the user on the
         same page and shows the relevant error message.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._generate_incorrect_passcode()
         response = self._submit_passcode(self.user_email, passcode)
-
-        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.INCORRECT_PASSCODE)
 
     def test_incorrect_passcode_does_not_authenticate(self):
@@ -106,11 +124,8 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submitting an incorrect passcode doesn't authenticate
         the user.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._generate_incorrect_passcode()
         self._submit_passcode(self.user_email, passcode)
-
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
@@ -119,11 +134,8 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submitting an incorrect passcode doesn't clear the email
         from the email input form.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._generate_incorrect_passcode()
         response = self._submit_passcode(self.user_email, passcode)
-
         self.assertContains(response, self.user_email)
 
     def test_incorrect_passcode_doesnt_clear_session(self):
@@ -131,11 +143,8 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submitting an incorrect passcode doesn't clear the
         session data containing the passcode.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._generate_incorrect_passcode()
         self._submit_passcode(self.user_email, passcode)
-
         self.assertNotEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_correct_passcode_after_incorrect_passcode(self):
@@ -143,14 +152,10 @@ class PasscodeErrorTest(AuthTestCase):
         Test that user can successfully authenticate with the correct
         passcode after submitting an incorrect passcode.
         """
-        self._submit_email(self.user_email)
-
         incorrect_passcode = self._generate_incorrect_passcode()
-        self._submit_passcode(self.user_email, incorrect_passcode)
-
         correct_passcode = self._get_correct_passcode()
+        self._submit_passcode(self.user_email, incorrect_passcode)
         self._submit_passcode(self.user_email, correct_passcode)
-
         user = get_user(self.client)
         self.assertTrue(user.is_authenticated)
 
@@ -159,13 +164,9 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submission of an expired passcode keeps the user on
         the same page and shows the relevant error message.
         """
-        self._submit_email(self.user_email)
-
         self._expire_passcode()
         passcode = self._get_correct_passcode()
         response = self._submit_passcode(self.user_email, passcode)
-
-        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.EXPIRED_PASSCODE)
 
     def test_expired_passcode_does_not_authenticate(self):
@@ -173,12 +174,9 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submission of a correct passcode after it has expired
         does not authenticate the user.
         """
-        self._submit_email(self.user_email)
-
         self._expire_passcode()
         passcode = self._get_correct_passcode()
         self._submit_passcode(self.user_email, passcode)
-
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
@@ -187,12 +185,9 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submission of an expired passcode clears the session
         data containing the passcode.
         """
-        self._submit_email(self.user_email)
-
         self._expire_passcode()
         passcode = self._get_correct_passcode()
         self._submit_passcode(self.user_email, passcode)
-
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_expired_session_shows_error_message(self):
@@ -201,13 +196,9 @@ class PasscodeErrorTest(AuthTestCase):
         keeps the user on the same page and shows the relevant error
         message.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._get_correct_passcode()
         self._expire_session()
         response = self._submit_passcode(self.user_email, passcode)
-
-        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.EXPIRED_SESSION)
 
     def test_expired_session_does_not_authenticate(self):
@@ -215,12 +206,9 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submission of passcode after the session has expired
         does not authenticate the user.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._get_correct_passcode()
         self._expire_session()
         self._submit_passcode(self.user_email, passcode)
-
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
@@ -229,12 +217,9 @@ class PasscodeErrorTest(AuthTestCase):
         Test that submission of passcode after the session has expired
         clears the session data containing the passcode.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._get_correct_passcode()
         self._expire_session()
         self._submit_passcode(self.user_email, passcode)
-
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
     def test_incorrect_email_in_passcode_submission_shows_error_message(self):
@@ -242,12 +227,8 @@ class PasscodeErrorTest(AuthTestCase):
         Test that passcode submission with an incorrect email address
         keeps the user on the same page and shows an error message.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._get_correct_passcode()
         response = self._submit_passcode(self.imposter_email, passcode)
-
-        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.INCORRECT_EMAIL)
 
     def test_incorrect_email_in_passcode_submission_does_not_authenticate_user(self):
@@ -255,11 +236,8 @@ class PasscodeErrorTest(AuthTestCase):
         Test that passcode submission with an incorrect email address
         does not authenticate the user.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._get_correct_passcode()
         self._submit_passcode(self.imposter_email, passcode)
-
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
@@ -268,26 +246,54 @@ class PasscodeErrorTest(AuthTestCase):
         Test that passcode submission with an incorrect email address
         clears the session data containing the passcode.
         """
-        self._submit_email(self.user_email)
-
         passcode = self._get_correct_passcode()
         self._submit_passcode(self.imposter_email, passcode)
-
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
 
 @override_settings(RATELIMIT_ENABLE=False)
-class InvalidEmailTest(AuthTestCase):
+class AuthEmailTest(AuthTestCase):
     """
-    Integration tests for invalid email submissions.
+    Integration tests for email submission in auth flow.
     """
+
+    def setUp(self):
+        self.EMAIL_INPUT_ID = "continue_with_email_input"
+        self.PASSCODE_INPUT_ID = "passcode_input"
+
+        self.valid_user_email = "testuser@example.com"
+        self.invalid_user_email = "testuser"
+
+    def test_valid_email_renders_passcode_form(self):
+        """
+        Test that submission of valid email address renders the
+        passcode form.
+        """
+        response = self._submit_email(self.valid_user_email)
+        self.assertContains(response, self.PASSCODE_INPUT_ID)
+
+    def test_valid_email_does_not_create_user(self):
+        """
+        Test that submission of valid email address does not create a
+        new user.
+        """
+        self._submit_email(self.valid_user_email)
+        user = User.objects.filter(email=self.valid_user_email)
+        self.assertFalse(user.exists())
 
     def test_invalid_email_shows_error_message(self):
         """
         Test that submission of invalid email address keeps the user
         on the same page and shows an error message.
         """
-        response = self._submit_email("notanemail")
-
-        self.assertEqual(response.status_code, 200)
+        response = self._submit_email(self.invalid_user_email)
         self.assertContains(response, ErrorMessages.INVALID_EMAIL)
+
+    def test_invalid_email_does_not_render_passcode_form(self):
+        """
+        Test that submission of invalid email address keeps the user
+        on the email form and does not show passcode input.
+        """
+        response = self._submit_email(self.invalid_user_email)
+        self.assertContains(response, self.EMAIL_INPUT_ID)
+        self.assertNotContains(response, self.PASSCODE_INPUT_ID)
