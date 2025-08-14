@@ -11,8 +11,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from src.apps.pages.constants import SuccessMessages
-
 
 User = get_user_model()
 
@@ -21,7 +19,7 @@ User = get_user_model()
     EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
     RATELIMIT_ENABLE=False
 )
-class LoginFlowTest(LiveServerTestCase):
+class AuthFlowTest(LiveServerTestCase):
     """
     Testing suite of a successful log in for a returning user.
     """
@@ -38,48 +36,33 @@ class LoginFlowTest(LiveServerTestCase):
         """
         Test login flow for a returning user.
         """
-        # Initialize user.
         User.objects.create_user(
             username=self.user_email,
             email=self.user_email
         )
 
-        # User goes to home page.
         self.browser.get(self.live_server_url)
-
-        # User submits their email address into the form.
         self._enter_email_address(self.user_email)
         self._click_continue_with_email_button()
 
-        # User copies the passcode from their email.
         passcode = self._copy_passcode_from_email()
-
-        # User submits passcode into the form.
         self._enter_passcode(passcode)
         self._click_login_button()
 
-        # User should be redirected to dashboard.
         self.wait.until(EC.url_contains("/dashboard/"))
 
     def test_signup_and_login(self):
         """
         Test login flow for new user.
         """
-        # User goes to home page.
         self.browser.get(self.live_server_url)
-
-        # User submits their email address into the form.
         self._enter_email_address(self.user_email)
         self._click_continue_with_email_button()
 
-        # User copies the passcode from their email.
         passcode = self._copy_passcode_from_email()
-
-        # User submits passcode into the form.
         self._enter_passcode(passcode)
         self._click_signup_button()
 
-        # User should be redirected to dashboard.
         self.wait.until(EC.url_contains("/dashboard/"))
 
     def _enter_email_address(self, email_address):

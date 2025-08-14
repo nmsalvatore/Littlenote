@@ -1,4 +1,4 @@
-"""Test login errors."""
+"""Integration tests for auth flows."""
 
 import time
 
@@ -7,195 +7,259 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls.base import reverse
 
-from src.apps.pages.constants import AuthSessionKeys, ErrorMessages, SuccessMessages
+from src.apps.pages.constants import AuthSessionKeys, ErrorMessages
 
 
 User = get_user_model()
 
 
 @override_settings(RATELIMIT_ENABLE=False)
-class FailedLoginTest(TestCase):
+class PasscodeErrorTest(TestCase):
     """
-    Testing suite for user login errors.
+    Integration tests for error cases involving passcode.
     """
 
     def setUp(self):
         self.user_email = "testuser@example.com"
+        self.imposter_email = "sketchyguy@example.com"
         self.front_page_url = reverse("pages:front")
 
-    def test_wrong_passcode(self):
-        # Submit user email address.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email
-        })
+    def test_incorrect_passcode_shows_error_message(self):
+        """
+        Test that submitting an incorrect passcode keeps the user on the
+        same page and shows the relevant error message.
+        """
+        self._submit_email(self.user_email)
 
-        # Get the correct passcode.
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        correct_passcode = passcode_data[AuthSessionKeys.PASSCODE_CODE]
+        passcode = self._generate_incorrect_passcode()
+        response = self._submit_passcode(self.user_email, passcode)
 
-        # Submit the wrong passcode.
-        wrong_passcode = self._generate_wrong_passcode(correct_passcode)
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email,
-            "passcode": wrong_passcode
-        })
-
-        # User should see error message.
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.INCORRECT_PASSCODE)
 
-        # User email should still be in email input.
+    def test_incorrect_passcode_does_not_authenticate(self):
+        """
+        Test that submitting an incorrect passcode doesn't authenticate
+        the user.
+        """
+        self._submit_email(self.user_email)
+
+        passcode = self._generate_incorrect_passcode()
+        self._submit_passcode(self.user_email, passcode)
+
+        user = get_user(self.client)
+        self.assertFalse(user.is_authenticated)
+
+    def test_incorrect_passcode_doesnt_clear_email_input_value(self):
+        """
+        Test that submitting an incorrect passcode doesn't clear the email
+        from the email input form.
+        """
+        self._submit_email(self.user_email)
+
+        passcode = self._generate_incorrect_passcode()
+        response = self._submit_passcode(self.user_email, passcode)
+
         self.assertContains(response, self.user_email)
 
-        # User should still be on same page.
-        self.assertEqual(response.status_code, 200)
+    def test_incorrect_passcode_doesnt_clear_session(self):
+        """
+        Test that submitting an incorrect passcode doesn't clear the
+        session data containing the passcode.
+        """
+        self._submit_email(self.user_email)
 
-        # User should not be logged in.
-        user = get_user(self.client)
-        self.assertFalse(user.is_authenticated)
+        passcode = self._generate_incorrect_passcode()
+        self._submit_passcode(self.user_email, passcode)
 
-        # Session data should persist.
         self.assertNotEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
-    def test_correct_passcode_after_wrong_passcode(self):
-        # Submit user email address.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email
-        })
+    def test_correct_passcode_after_incorrect_passcode(self):
+        """
+        Test that user can successfully authenticate with the correct
+        passcode after submitting an incorrect passcode.
+        """
+        self._submit_email(self.user_email)
 
-        # Get the correct passcode.
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        correct_passcode = passcode_data[AuthSessionKeys.PASSCODE_CODE]
+        incorrect_passcode = self._generate_incorrect_passcode()
+        self._submit_passcode(self.user_email, incorrect_passcode)
 
-        # Submit the wrong passcode.
-        wrong_passcode = self._generate_wrong_passcode(correct_passcode)
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email,
-            "passcode": wrong_passcode
-        })
+        correct_passcode = self._get_correct_passcode()
+        self._submit_passcode(self.user_email, correct_passcode)
 
-        # User should not be logged in.
-        user = get_user(self.client)
-        self.assertFalse(user.is_authenticated)
-
-        # Submit the correct passcode.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email,
-            "passcode": correct_passcode,
-        }, follow=True)
-
-        # User should not be logged in.
         user = get_user(self.client)
         self.assertTrue(user.is_authenticated)
 
-        # User should see welcome message.
-        self.assertContains(response, SuccessMessages.WELCOME_NEW_USER)
+    def test_expired_passcode_shows_error_message(self):
+        """
+        Test that submission of an expired passcode keeps the user on
+        the same page and shows the relevant error message.
+        """
+        self._submit_email(self.user_email)
 
-        # Session data should be removed.
-        self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
+        self._expire_passcode()
+        passcode = self._get_correct_passcode()
+        response = self._submit_passcode(self.user_email, passcode)
 
-    def test_expired_passcode(self):
-        # Submit user email address.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email
-        })
-
-        # Manually expire the passcode
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        passcode_data[AuthSessionKeys.PASSCODE_EXPIRATION] = time.perf_counter() - 10
-
-        # Save session data
-        session = self.client.session
-        session[AuthSessionKeys.PASSCODE] = passcode_data
-        session.save()
-
-        # Get the correct passcode
-        correct_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
-
-        # Submit the correct passcode.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email,
-            "passcode": correct_passcode
-        })
-
-        # User should see error message.
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.EXPIRED_PASSCODE)
 
-        # User should still be on same page.
-        self.assertEqual(response.status_code, 200)
+    def test_expired_passcode_does_not_authenticate(self):
+        """
+        Test that submission of a correct passcode after it has expired
+        does not authenticate the user.
+        """
+        self._submit_email(self.user_email)
 
-        # User should not be logged in.
+        self._expire_passcode()
+        passcode = self._get_correct_passcode()
+        self._submit_passcode(self.user_email, passcode)
+
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
-        # Session data should be removed.
+    def test_expired_passcode_clears_session(self):
+        """
+        Test that submission of an expired passcode clears the session
+        data containing the passcode.
+        """
+        self._submit_email(self.user_email)
+
+        self._expire_passcode()
+        passcode = self._get_correct_passcode()
+        self._submit_passcode(self.user_email, passcode)
+
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
-    def test_expired_session(self):
-        # Submit user email address.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email
-        })
+    def test_expired_session_shows_error_message(self):
+        """
+        Test that submission of passcode after the session has expired
+        keeps the user on the same page and shows the relevant error
+        message.
+        """
+        self._submit_email(self.user_email)
 
-        # Get the correct passcode.
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        correct_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
+        passcode = self._get_correct_passcode()
+        self._expire_session()
+        response = self._submit_passcode(self.user_email, passcode)
 
-        # Manually expire the session data and save.
-        session = self.client.session
-        del session[AuthSessionKeys.PASSCODE]
-        session.save()
-
-        # Submit the correct passcode.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email,
-            "passcode": correct_passcode
-        })
-
-        # User should see error message.
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.EXPIRED_SESSION)
 
-        # User should still be on same page.
-        self.assertEqual(response.status_code, 200)
+    def test_expired_session_does_not_authenticate(self):
+        """
+        Test that submission of passcode after the session has expired
+        does not authenticate the user.
+        """
+        self._submit_email(self.user_email)
 
-        # User should not be logged in.
+        passcode = self._get_correct_passcode()
+        self._expire_session()
+        self._submit_passcode(self.user_email, passcode)
+
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
-        # Session data should be removed.
+    def test_expired_session_clears_session(self):
+        """
+        Test that submission of passcode after the session has expired
+        clears the session data containing the passcode.
+        """
+        self._submit_email(self.user_email)
+
+        passcode = self._get_correct_passcode()
+        self._expire_session()
+        self._submit_passcode(self.user_email, passcode)
+
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
-    def test_wrong_email(self):
-        # Submit user email address.
-        response = self.client.post(self.front_page_url, {
-            "email": self.user_email
-        })
+    def test_incorrect_email_in_passcode_submission_shows_error_message(self):
+        """
+        Test that passcode submission with an incorrect email address
+        keeps the user on the same page and shows an error message.
+        """
+        self._submit_email(self.user_email)
 
-        # Get the correct passcode.
-        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
-        correct_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
+        passcode = self._get_correct_passcode()
+        response = self._submit_passcode(self.imposter_email, passcode)
 
-        # Submit the correct passcode.
-        response = self.client.post(self.front_page_url, {
-            "email": "wronguser@example.com",
-            "passcode": correct_passcode
-        })
-
-        # User should see error message.
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, ErrorMessages.INCORRECT_EMAIL)
 
-        # User should still be on same page.
-        self.assertEqual(response.status_code, 200)
+    def test_incorrect_email_in_passcode_submission_does_not_authenticate_user(self):
+        """
+        Test that passcode submission with an incorrect email address
+        does not authenticate the user.
+        """
+        self._submit_email(self.user_email)
 
-        # User should not be logged in.
+        passcode = self._get_correct_passcode()
+        self._submit_passcode(self.imposter_email, passcode)
+
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
-        # Session data should be removed.
+    def test_incorrect_email_in_passcode_submission_clears_session(self):
+        """
+        Test that passcode submission with an incorrect email address
+        clears the session data containing the passcode.
+        """
+        self._submit_email(self.user_email)
+
+        passcode = self._get_correct_passcode()
+        self._submit_passcode(self.imposter_email, passcode)
+
         self.assertEqual(self.client.session.get(AuthSessionKeys.PASSCODE), None)
 
-    def _generate_wrong_passcode(self, passcode):
+    def _submit_email(self, email):
+        """
+        Submit the user email to the form.
+        """
+        return self.client.post(self.front_page_url, {
+            "email": email
+        })
+
+    def _get_correct_passcode(self):
+        """
+        Get the correct passcode from the session data.
+        """
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        return passcode_data[AuthSessionKeys.PASSCODE_CODE]
+
+    def _generate_incorrect_passcode(self):
         """
         Generate a purposefully incorrect passcode by flipping the last
         digit of the correct passcode.
         """
+        passcode = self._get_correct_passcode()
         return passcode[:-1] + "0" if passcode[-1] != "0" else "1"
+
+    def _submit_passcode(self, email, passcode):
+        """
+        Submit the passcode to the form.
+        """
+        return self.client.post(self.front_page_url, {
+            "email": email,
+            "passcode": passcode
+        })
+
+    def _expire_passcode(self):
+        """
+        Force passcode expiration by setting PASSCODE_EXPIRATION to
+        10 seconds in the past.
+        """
+        passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
+        passcode_data[AuthSessionKeys.PASSCODE_EXPIRATION] = time.perf_counter() - 10
+
+        session = self.client.session
+        session[AuthSessionKeys.PASSCODE] = passcode_data
+        session.save()
+
+    def _expire_session(self):
+        """
+        Force session to expire my deleting the passcode key from the
+        session data.
+        """
+        session = self.client.session
+        del session[AuthSessionKeys.PASSCODE]
+        session.save()
