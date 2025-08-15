@@ -1,16 +1,13 @@
 """Functional tests of user authentication flows."""
 
-import re
-
 from django.contrib.auth import get_user_model
-from django.core import mail
 from django.test import LiveServerTestCase, override_settings
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
+from .helpers.interactions import UserInteractions
 
 User = get_user_model()
 
@@ -21,15 +18,16 @@ User = get_user_model()
 )
 class AuthFlowTest(LiveServerTestCase):
     """
-    Testing suite of a successful log in for a returning user.
+    Functional tests for authentication of new or returning users.
     """
 
-    def setUp(self) -> None:
+    def setUp(self):
         self.browser = webdriver.Firefox()
         self.wait = WebDriverWait(self.browser, timeout=5)
+        self.interactions = UserInteractions(self.browser)
         self.user_email = "testuser@example.com"
 
-    def tearDown(self) -> None:
+    def tearDown(self):
         self.browser.quit()
 
     def test_login(self):
@@ -42,13 +40,7 @@ class AuthFlowTest(LiveServerTestCase):
         )
 
         self.browser.get(self.live_server_url)
-        self._enter_email_address(self.user_email)
-        self._click_continue_with_email_button()
-
-        passcode = self._copy_passcode_from_email()
-        self._enter_passcode(passcode)
-        self._click_login_button()
-
+        self.interactions.login_returning_user(self.user_email)
         self.wait.until(EC.url_contains("/dashboard/"))
 
     def test_signup_and_login(self):
@@ -56,54 +48,5 @@ class AuthFlowTest(LiveServerTestCase):
         Test login flow for new user.
         """
         self.browser.get(self.live_server_url)
-        self._enter_email_address(self.user_email)
-        self._click_continue_with_email_button()
-
-        passcode = self._copy_passcode_from_email()
-        self._enter_passcode(passcode)
-        self._click_signup_button()
-
+        self.interactions.signup_and_login_new_user(self.user_email)
         self.wait.until(EC.url_contains("/dashboard/"))
-
-    def _enter_email_address(self, email_address):
-        """
-        User enters their email address into the form.
-        """
-        email_input = self.browser.find_element(By.ID, "continue_with_email_input")
-        email_input.send_keys(email_address)
-
-    def _click_continue_with_email_button(self):
-        """
-        User click of the "Continue with email" button.
-        """
-        email_button = self.browser.find_element(By.ID, "continue_with_email_button")
-        email_button.click()
-
-    def _copy_passcode_from_email(self):
-        """
-        User copies passcode from email.
-        """
-        email_message = mail.outbox[0]
-        passcode_match = re.search(r"Your one-time passcode is (\d{6})", email_message.subject)
-        return passcode_match.group(1)
-
-    def _enter_passcode(self, passcode):
-        """
-        User enters the passcode into the form.
-        """
-        passcode_input = self.wait.until(EC.presence_of_element_located((By.NAME, "passcode")))
-        passcode_input.send_keys(passcode)
-
-    def _click_login_button(self):
-        """
-        User clicks the login button.
-        """
-        login_button = self.browser.find_element(By.ID, "login_button")
-        login_button.click()
-
-    def _click_signup_button(self):
-        """
-        User clicks the sign-up button.
-        """
-        signup_button = self.browser.find_element(By.ID, "signup_button")
-        signup_button.click()
