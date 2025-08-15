@@ -6,9 +6,9 @@ class AuthConfig:
     Authentication-related constants.
     """
     # Passcode configuration
-    PASSCODE_LENGTH = 8
+    PASSCODE_LENGTH = 6
     PASSCODE_LIFETIME = 300
-    PASSCODE_MIN_VALUE = 10000000
+    PASSCODE_MIN_VALUE = 100000
 
     # Rate limits
     GENERAL_RATE_LIMIT = "15/m"

@@ -62,10 +62,10 @@ class GeneratePasscodeTest(SimpleTestCase):
 
     def test_length_is_six_digits(self):
         """
-        Test that passcode is 8 characters long.
+        Test that passcode is 6 characters long.
         """
         passcode = generate_passcode()
-        self.assertEqual(len(passcode), 8)
+        self.assertEqual(len(passcode), 6)
 
     def test_contains_only_digits(self):
         """
@@ -73,8 +73,8 @@ class GeneratePasscodeTest(SimpleTestCase):
         """
         passcode = generate_passcode()
         passcode_number = int(passcode)
-        self.assertGreaterEqual(passcode_number, 10000000)
-        self.assertLessEqual(passcode_number, 99999999)
+        self.assertGreaterEqual(passcode_number, 100000)
+        self.assertLessEqual(passcode_number, 999999)
 
     def test_no_leading_zeros(self):
         """
@@ -97,9 +97,9 @@ class GeneratePasscodeTest(SimpleTestCase):
         """
         passcodes = [int(generate_passcode()) for _ in range(100)]
 
-        low_range = [p for p in passcodes if 10000000 <= p < 40000000]
-        mid_range = [p for p in passcodes if 40000000 <= p < 70000000]
-        high_range = [p for p in passcodes if 70000000 <= p <= 99999999]
+        low_range = [p for p in passcodes if 100000 <= p < 400000]
+        mid_range = [p for p in passcodes if 400000 <= p < 700000]
+        high_range = [p for p in passcodes if 700000 <= p <= 999999]
 
         ranges_hit = sum([len(low_range) > 0, len(mid_range) > 0, len(high_range) > 0])
         self.assertGreaterEqual(ranges_hit, 2, "Passcodes should be distributed across ranges")
@@ -110,10 +110,10 @@ class GeneratePasscodeTest(SimpleTestCase):
         Test that the function uses the secrets module for
         cryptographic randomness.
         """
-        mock_randbelow.return_value = 12345678
+        mock_randbelow.return_value = 123456
         passcode = generate_passcode()
-        mock_randbelow.assert_called_once_with(90000000)
-        self.assertEqual(passcode, "22345678")
+        mock_randbelow.assert_called_once_with(900000)
+        self.assertEqual(passcode, "223456")
 
     @patch("src.apps.pages.utils.auth_utils.secrets.randbelow")
     def test_minimum_value_generation(self, mock_randbelow):
@@ -122,16 +122,16 @@ class GeneratePasscodeTest(SimpleTestCase):
         """
         mock_randbelow.return_value = 0
         passcode = generate_passcode()
-        self.assertEqual(passcode, "10000000")
+        self.assertEqual(passcode, "100000")
 
     @patch("src.apps.pages.utils.auth_utils.secrets.randbelow")
     def test_maximum_value_generation(self, mock_randbelow):
         """
         Test generation of maximum possible value.
         """
-        mock_randbelow.return_value = 89999999
+        mock_randbelow.return_value = 899999
         passcode = generate_passcode()
-        self.assertEqual(passcode, "99999999")
+        self.assertEqual(passcode, "999999")
 
     def test_performance(self):
         """
@@ -157,13 +157,13 @@ class SendPasscodeEmailTest(SimpleTestCase):
         Test that send_passcode_email calls send_mail with correct parameters.
         """
         email = "test@example.com"
-        passcode = "12345678"
+        passcode = "123456"
 
         send_passcode_email(email, passcode)
 
         mock_send_mail.assert_called_once_with(
-            "Your one-time passcode is 12345678.",
-            "Here is your one-time passcode for Littlenote: 12345678",
+            "Your one-time passcode is 123456.",
+            "Here is your one-time passcode for Littlenote: 123456",
             settings.SERVER_EMAIL,
             ["test@example.com"],
             fail_silently=False
@@ -177,7 +177,7 @@ class SendPasscodeEmailTest(SimpleTestCase):
         mock_send_mail.side_effect = Exception("SMTP Error")
 
         with self.assertRaises(Exception):
-            send_passcode_email("test@example.com", "12345678")
+            send_passcode_email("test@example.com", "123456")
 
 
 class SessionManagementTest(TestCase):
@@ -194,7 +194,7 @@ class SessionManagementTest(TestCase):
         Test setting passcode session data.
         """
         email = "test@example.com"
-        code = "12345678"
+        code = "123456"
 
         set_passcode_session(self.request, email, code)
 
@@ -238,7 +238,7 @@ class ValidatePasscodeSessionTest(TestCase):
         }
 
         is_valid, message, should_reset = validate_passcode_session(
-            self.request, "test@example.com", "12345678"
+            self.request, "test@example.com", "123456"
         )
 
         self.assertFalse(is_valid)
@@ -256,7 +256,7 @@ class ValidatePasscodeSessionTest(TestCase):
         }
 
         is_valid, message, should_reset = validate_passcode_session(
-            self.request, "test@example.com", "12345678"
+            self.request, "test@example.com", "123456"
         )
 
         self.assertFalse(is_valid)
@@ -272,13 +272,13 @@ class ValidatePasscodeSessionTest(TestCase):
         mock_perf_counter.return_value = expiration_time
 
         self.request.session[AuthSessionKeys.PASSCODE] = {
-            "code": "12345678",
+            "code": "123456",
             "email": "test@example.com",
             "expires_at": expiration_time
         }
 
         is_valid, message, should_reset = validate_passcode_session(
-            self.request, "test@example.com", "12345678"
+            self.request, "test@example.com", "123456"
         )
 
         self.assertFalse(is_valid)

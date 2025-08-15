@@ -18,9 +18,9 @@ def normalize_email(email):
 
 def generate_passcode():
     """
-    Generate a random 8-digit passcode.
+    Generate a random 6-digit passcode.
     """
-    return f"{secrets.randbelow(90000000) + AuthConfig.PASSCODE_MIN_VALUE}"
+    return f"{secrets.randbelow(900000) + AuthConfig.PASSCODE_MIN_VALUE}"
 
 def send_passcode_email(email, passcode):
     """

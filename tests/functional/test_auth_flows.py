@@ -84,7 +84,7 @@ class AuthFlowTest(LiveServerTestCase):
         User copies passcode from email.
         """
         email_message = mail.outbox[0]
-        passcode_match = re.search(r"Your one-time passcode is (\d{8})", email_message.subject)
+        passcode_match = re.search(r"Your one-time passcode is (\d{6})", email_message.subject)
         return passcode_match.group(1)
 
     def _enter_passcode(self, passcode):
