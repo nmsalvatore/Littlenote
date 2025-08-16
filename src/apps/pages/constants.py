@@ -64,7 +64,7 @@ class TemplatePaths:
     Template-related constants.
     """
     FRONT_PAGE = "pages/front.html"
-    DASHBOARD = "dashboard/dashboard.html"
+    DASHBOARD = "pages/dashboard.html"
 
     # Partials
     EMAIL_FORM = "pages/partials/email_form.html"
