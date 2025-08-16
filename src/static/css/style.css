@@ -30,11 +30,27 @@ body {
     min-height: 100dvh;
 }
 
+body > header,
 body > main,
 body > footer {
-    margin: auto;
+    margin: 0 auto;
     max-width: 720px;
     width: 100%;
+}
+
+body > header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 120px;
+}
+
+body > header > menu {
+    margin-left: 0;
+    list-style-type: none;
+    display: flex;
+    gap: var(--space-md);
 }
 
 body > main {
@@ -170,5 +186,26 @@ ul.messages {
     width: 100%;
     font-size: 80%;
     border: 1px solid var(--tertiary);
+    color: var(--secondary);
+}
+
+div#heatmap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 1fr);
+    grid-template-columns: repeat(52, 1fr);
+    gap: 4px;
+}
+
+div#heatmap div.cell {
+    background: darkseagreen;
+    height: 9.92px;
+    border-radius: 2px;
+}
+
+section h2 {
+    font-size: 0.8rem;
+    font-family: inherit;
+    font-weight: normal;
     color: var(--secondary);
 }
