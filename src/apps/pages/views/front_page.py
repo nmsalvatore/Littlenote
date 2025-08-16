@@ -1,4 +1,4 @@
-"""Views for the pages app."""
+"""Views for the front page."""
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
@@ -11,8 +11,8 @@ from django.views.generic import TemplateView
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
-from .constants import AuthConfig, ErrorMessages, SuccessMessages, TemplatePaths
-from .utils.auth_utils import (
+from ..constants import AuthConfig, ErrorMessages, SuccessMessages, TemplatePaths
+from ..utils.auth_utils import (
     delete_passcode_session_data,
     generate_passcode,
     normalize_email,
@@ -109,7 +109,6 @@ class FrontPageView(TemplateView):
             )
 
             login(request, user)
-
             delete_passcode_session_data(request)
             self._welcome_new_user(request, user_is_new)
 
@@ -169,7 +168,3 @@ class FrontPageView(TemplateView):
 
         context["passcode_sent"] = True
         return render(request, template_name, context)
-
-
-class DashboardView(TemplateView):
-    template_name = TemplatePaths.DASHBOARD
