@@ -1,11 +1,23 @@
-<h1>Dashboard</h1>
+{% extends "base.html" %}
 
-{% if user.is_authenticated %}
-<p>{{ user }}</p>
-{% endif %}
+{% block subtitle %}
+    Dashboard
+{% endblock subtitle %}
 
-<ul class="messages">
-    {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
+{% block content %}
+    <main>
+        <h1>Dashboard</h1>
+
+        {% if user.is_authenticated %}
+        <p>{{ user }}</p>
+        {% endif %}
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </main>
+{% endblock content %}

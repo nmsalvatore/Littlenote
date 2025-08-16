@@ -1,16 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="{% static 'css/modern-normalize.css' %}">
-	<link rel="stylesheet" href="{% static 'css/style.css' %}">
-	<script src="{% static 'js/htmx.min.js' %}" defer></script>
-	<title>Littlenote</title>
-</head>
-<body>
+{% block content %}
     <main>
         <div class="hero">
             <img src="{% static 'images/lilnote.png' %}" alt="Cute little note with arms and legs.">
@@ -23,8 +14,8 @@
             {% endif %}
         </div>
     </main>
+
     <footer>
         <p>&copy; 2025 Littlenote.</p>
     </footer>
-</body>
-</html>
+{% endblock content %}
