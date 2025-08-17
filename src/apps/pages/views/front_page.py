@@ -139,7 +139,8 @@ class FrontPageView(TemplateView):
             delete_passcode_session_data(request)
             return self._render_email_form(request)
         else:
-            context = {"email": user_email}
+            user = User.objects.filter(email=user_email)
+            context = {"email": user_email, "user_has_account": user.exists()}
             return self._render_passcode_form(request, context)
 
     def _render_email_form(self, request, context={}):
