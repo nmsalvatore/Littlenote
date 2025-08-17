@@ -1,35 +1,60 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block subtitle %}
     Dashboard
 {% endblock subtitle %}
 
 {% block content %}
-    <header>
-        <a href="/" class="title">Littlenote</a>
-        <menu>
-            <li>Notes</li>
-            <li>Community</li>
-            <li>My Account</li>
-        </menu>
-    </header>
+    <div class="container">
+        <aside class="sidebar">
+            <header>
+                <a href="/" class="title">Littlenote</a>
+            </header>
+            <nav>
+                <div class="top-options">
+                    <a href="/">New Note</a>
+                    <a href="/">Notes</a>
+                    <a href="/">Tags</a>
+                </div>
+                <div class="bottom-options">
+                    <a href="/">Settings</a>
+                </div>
+            </nav>
+        </aside>
 
-    <main>
-        {% if messages %}
-            {% include "pages/partials/messages.html" %}
-        {% endif %}
+        <main>
+            {% if messages %}
+                {% include "pages/partials/messages.html" %}
+            {% endif %}
 
-        <section>
-            <h2>Note Contributions</h2>
-            <div id="heatmap">
-                {% for day in days %}
-                    <div class="cell" data-day="{{ day|date:'Y-m-d' }}" title="{{ day|date:'F j, Y' }}"></div>
-                {% endfor %}
-            </div>
-        </section>
-    </main>
+            <section>
+                <h2>Contributions</h2>
+                <div id="heatmap">
+                    {% for day in days %}
+                        <div class="cell" data-day="{{ day|date:'Y-m-d' }}" title="{{ day|date:'F j, Y' }}"></div>
+                    {% endfor %}
+                </div>
+            </section>
 
-    <footer>
-        <p>&copy; 2025 Littlenote.</p>
-    </footer>
+            <section>
+                <h2>Tags</h2>
+                <p class="empty">You don't have any tags.</p>
+            </section>
+
+            <section>
+                <h2>Recent Notes</h2>
+                <p class="empty">You don't have any notes.</p>
+            </section>
+
+            <footer>
+                <p>&copy; 2025 Littlenote.</p>
+            </footer>
+        </main>
+    </div>
+
 {% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock scripts %}
