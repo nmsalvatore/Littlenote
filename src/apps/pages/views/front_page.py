@@ -28,6 +28,11 @@ User = get_user_model()
 class FrontPageView(TemplateView):
     template_name =  TemplatePaths.FRONT_PAGE
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("pages:dashboard")
+        return super().dispatch(request, *args, **kwargs)
+
     @method_decorator(ratelimit(
         key="ip",
         rate=AuthConfig.GENERAL_RATE_LIMIT,
