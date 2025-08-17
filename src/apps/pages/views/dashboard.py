@@ -2,6 +2,8 @@
 
 from datetime import datetime, timedelta
 
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
 
 from ..constants import TemplatePaths
@@ -10,10 +12,13 @@ from ..constants import TemplatePaths
 class DashboardView(TemplateView):
     template_name = TemplatePaths.DASHBOARD
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Get last calendar day
         last_calendar_day = self._get_last_calendar_day()
         first_calendar_day = last_calendar_day - timedelta(days=363)
 
