@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 :root {
-    --bg: #f3f3ed;
+    --bg: hsl(60 20% 94%);
     --primary: #382e2e;
     --secondary: #6b6161;
     --tertiary: #85adad;
@@ -24,24 +24,27 @@ html {
 
 body {
     display: flex;
-    flex-direction: column;
     font-family: "Open Sans", sans-serif;
     line-height: var(--line-height-default);
     min-height: 100dvh;
 }
 
-body > div.container {
+body > .container {
     display: flex;
-    flex: 1;
-    margin: var(--space-lg) auto;
-    margin-top: var(--space-lg);
+    margin: 0 auto;
     max-width: 960px;
-    width: 100%;
+    flex: 1;
+}
+
+aside.sidebar,
+main.content {
+    margin: var(--space-xl) auto;
 }
 
 aside.sidebar {
     display: flex;
     flex-direction: column;
+    max-width: 200px;
     width: 100%;
 }
 
@@ -58,36 +61,38 @@ aside.sidebar > nav {
 
 aside.sidebar > nav a {
     color: var(--secondary);
-    display: block;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
     padding: 4px 8px;
     text-decoration: none;
-    width: 200px;
+    width: 180px;
     position: relative;
     border-radius: 8px;
     left: -8px;
+    gap: var(--space-sm);
+}
+
+aside.sidebar > nav a img {
+    height: 20px;
 }
 
 aside.sidebar > nav a:hover {
-    background: rgba(50, 50, 25, 0.05);
+    background: hsl(60 15% 89%);
 }
 
 aside.sidebar > nav .top-options,
 aside.sidebar > nav .bottom-options {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: var(--space-sm);
 }
 
-body > header > menu {
-    margin-left: 0;
-    list-style-type: none;
-    display: flex;
-    gap: var(--space-md);
-}
-
-div.container > main {
-    margin-top: var(--space-xl);
+main.content > h1 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-lg);
+    margin-top: 0;
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid hsl(60 10% 85%);
 }
 
 body > main:has(div.hero) {
@@ -236,7 +241,6 @@ div#heatmap {
 
 div#heatmap div.cell {
     background: darkseagreen;
-    height: 9.92px;
     border-radius: 2px;
 }
 

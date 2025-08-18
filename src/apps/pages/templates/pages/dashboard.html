@@ -13,17 +13,31 @@
             </header>
             <nav>
                 <div class="top-options">
-                    <a href="/">New Note</a>
-                    <a href="/">Notes</a>
-                    <a href="/">Tags</a>
+                    <a href="/">
+                        <img src="{% static 'icons/add.svg' %}" alt="Plus symbol">
+                        New Note
+                    </a>
+                    <a href="/">
+                        <img src="{% static 'icons/notes.svg' %}" alt="Note stack">
+                        Notes
+                    </a>
+                    <a href="/">
+                        <img src="{% static 'icons/tag.svg' %}" alt="Hash symbol">
+                        Tags
+                    </a>
                 </div>
                 <div class="bottom-options">
-                    <a href="/">Settings</a>
+                    <a href="/">
+                        <img src="{% static 'icons/settings.svg' %}" alt="Gear icon">
+                        Settings
+                    </a>
                 </div>
             </nav>
         </aside>
 
-        <main>
+        <main class="content">
+            <h1>Dashboard</h1>
+
             {% if messages %}
                 {% include "pages/partials/messages.html" %}
             {% endif %}
@@ -48,11 +62,10 @@
             </section>
 
             <footer>
-                <p>&copy; 2025 Littlenote.</p>
+                <small>&copy; 2025 Littlenote.</small>
             </footer>
         </main>
     </div>
-
 {% endblock content %}
 
 {% block scripts %}
