@@ -1,73 +1,34 @@
-{% extends "base.html" %}
+{% extends "app.html" %}
 {% load static %}
 
 {% block subtitle %}
     Dashboard
 {% endblock subtitle %}
 
-{% block content %}
-    <div class="container">
-        <aside class="sidebar">
-            <header>
-                <a href="/" class="title">Littlenote</a>
-            </header>
-            <nav>
-                <div class="top-options">
-                    <a href="{% url 'notes:new_note' %}">
-                        <img src="{% static 'icons/add.svg' %}" alt="Plus symbol">
-                        New Note
-                    </a>
-                    <a href="/">
-                        <img src="{% static 'icons/notes.svg' %}" alt="Note stack">
-                        Notes
-                    </a>
-                    <a href="/">
-                        <img src="{% static 'icons/tag.svg' %}" alt="Hash symbol">
-                        Tags
-                    </a>
-                </div>
-                <div class="bottom-options">
-                    <a href="/">
-                        <img src="{% static 'icons/settings.svg' %}" alt="Gear icon">
-                        Settings
-                    </a>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="content">
-            <h1>Dashboard</h1>
-
-            {% if messages %}
-                {% include "pages/partials/messages.html" %}
-            {% endif %}
-
-            <section>
-                <h2>Contributions</h2>
-                <div id="heatmap">
-                    {% for day in days %}
-                        <div class="cell" data-day="{{ day|date:'Y-m-d' }}" title="{{ day|date:'F j, Y' }}"></div>
-                    {% endfor %}
-                </div>
-            </section>
-
-            <section>
-                <h2>Tags</h2>
-                <p class="empty">You don't have any tags.</p>
-            </section>
-
-            <section>
-                <h2>Recent Notes</h2>
-                <p class="empty">You don't have any notes.</p>
-            </section>
-
-            <footer>
-                <small>&copy; 2025 Littlenote.</small>
-            </footer>
-        </main>
-    </div>
-{% endblock content %}
-
-{% block scripts %}
-    <script src="{% static 'js/dashboard.js' %}"></script>
-{% endblock scripts %}
+{% block app_content %}
+    <h1>Dashboard</h1>
+    {% if messages %}
+        {% include "pages/partials/messages.html" %}
+    {% endif %}
+    <section>
+        <h2>Contributions</h2>
+        <div id="heatmap">
+            {% for day in days %}
+                <div class="cell"
+                     data-day="{{ day|date:'Y-m-d' }}"
+                     title="{{ day|date:'F j, Y' }}"></div>
+            {% endfor %}
+        </div>
+    </section>
+    <section>
+        <h2>Tags</h2>
+        <p class="empty">You don't have any tags.</p>
+    </section>
+    <section>
+        <h2>Recent Notes</h2>
+        <p class="empty">You don't have any notes.</p>
+    </section>
+    <footer>
+        <small>&copy; 2025 Littlenote.</small>
+    </footer>
+{% endblock app_content %}

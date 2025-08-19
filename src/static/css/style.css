@@ -87,6 +87,10 @@ aside.sidebar > nav .bottom-options {
     gap: var(--space-sm);
 }
 
+main.content {
+    width: 100%;
+}
+
 main.content > h1 {
     font-size: 1.5rem;
     margin-bottom: var(--space-lg);

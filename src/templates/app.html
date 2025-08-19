@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block subtitle %}
+    Dashboard
+{% endblock subtitle %}
+
+{% block page_content %}
+    <div class="container">
+        <aside class="sidebar">
+            <header>
+                <a href="/" class="title">Littlenote</a>
+            </header>
+            <nav>
+                <div class="top-options">
+                    <a href="{% url 'notes:new_note' %}">
+                        <img src="{% static 'icons/add.svg' %}" alt="Plus symbol">
+                        New Note
+                    </a>
+                    <a href="/">
+                        <img src="{% static 'icons/notes.svg' %}" alt="Note stack">
+                        Notes
+                    </a>
+                    <a href="/">
+                        <img src="{% static 'icons/tag.svg' %}" alt="Hash symbol">
+                        Tags
+                    </a>
+                </div>
+                <div class="bottom-options">
+                    <a href="/">
+                        <img src="{% static 'icons/settings.svg' %}" alt="Gear icon">
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="content">
+            {% block app_content %}
+            {% endblock app_content %}
+        </main>
+    </div>
+{% endblock page_content %}
