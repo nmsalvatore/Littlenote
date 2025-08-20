@@ -1,0 +1,28 @@
+{% load static %}
+
+<nav>
+    <div class="top-options">
+        <a href="{% url 'pages:dashboard' %}">
+            <img src="{% static 'icons/home.svg' %}" alt="A little house">
+            Home
+        </a>
+        <a href="{% url 'notes:home' %}">
+            <img src="{% static 'icons/package.svg' %}" alt="Note stack">
+            Notes
+        </a>
+        <a href="/">
+            <img src="{% static 'icons/book.svg' %}" alt="Book icon">
+            Journal
+        </a>
+        <a href="/">
+            <img src="{% static 'icons/calendar.svg' %}" alt="Calendar icon">
+            Calendar
+        </a>
+    </div>
+    <div class="bottom-options">
+        <a href="/">
+            <img src="{% static 'icons/settings.svg' %}" alt="Gear icon">
+            Settings
+        </a>
+    </div>
+</nav>

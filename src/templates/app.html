@@ -11,28 +11,7 @@
             <header>
                 <a href="/" class="title">Littlenote</a>
             </header>
-            <nav>
-                <div class="top-options">
-                    <a href="{% url 'notes:new_note' %}">
-                        <img src="{% static 'icons/add.svg' %}" alt="Plus symbol">
-                        New Note
-                    </a>
-                    <a href="/">
-                        <img src="{% static 'icons/notes.svg' %}" alt="Note stack">
-                        Notes
-                    </a>
-                    <a href="/">
-                        <img src="{% static 'icons/tag.svg' %}" alt="Hash symbol">
-                        Tags
-                    </a>
-                </div>
-                <div class="bottom-options">
-                    <a href="/">
-                        <img src="{% static 'icons/settings.svg' %}" alt="Gear icon">
-                        Settings
-                    </a>
-                </div>
-            </nav>
+            {% include "app_nav.html" %}
         </aside>
 
         <main class="content">

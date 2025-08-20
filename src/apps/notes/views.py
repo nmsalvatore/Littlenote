@@ -3,11 +3,11 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
 
 
-class NewNoteView(TemplateView):
+class NotesHomeView(TemplateView):
     """
-    View for creation of new notes.
+    View for the notes home page.
     """
-    template_name = "notes/new_note.html"
+    template_name = "notes/home.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
