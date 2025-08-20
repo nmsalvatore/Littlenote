@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 :root {
-    --bg: hsl(60 20% 94%);
+    --bg: #f8f8f8;
     --primary: #382e2e;
     --secondary: #6b6161;
     --tertiary: #85adad;
@@ -31,20 +31,15 @@ body {
 
 body > .container {
     display: flex;
-    margin: 0 auto;
-    max-width: 960px;
+    margin: 0 var(--space-lg);
     flex: 1;
 }
 
-aside.sidebar,
-main.content {
-    margin: var(--space-xl) auto;
-}
-
 aside.sidebar {
+    margin: var(--space-xl) 0;
     display: flex;
     flex-direction: column;
-    max-width: 200px;
+    max-width: 220px;
     width: 100%;
 }
 
@@ -63,21 +58,22 @@ aside.sidebar > nav a {
     color: var(--secondary);
     display: flex;
     align-items: center;
+    font-weight: 500;
     padding: 4px 8px;
     text-decoration: none;
     width: 180px;
     position: relative;
     border-radius: 8px;
-    left: -8px;
+    left: -10px;
     gap: var(--space-sm);
 }
 
 aside.sidebar > nav a img {
-    height: 20px;
+    height: 18px;
 }
 
 aside.sidebar > nav a:hover {
-    background: hsl(60 15% 89%);
+    background: #fdfdfd;
 }
 
 aside.sidebar > nav .top-options,
@@ -89,14 +85,22 @@ aside.sidebar > nav .bottom-options {
 
 main.content {
     width: 100%;
+    background: #fdfdfd;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 2px 8px -6px;
+    margin-top: var(--space-md);
+    padding: var(--space-lg);
 }
 
-main.content > h1 {
+main.content > div.container {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+main.content h1 {
     font-size: 1.5rem;
     margin-bottom: var(--space-lg);
     margin-top: 0;
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid hsl(60 10% 85%);
 }
 
 body > main:has(div.hero) {
@@ -238,14 +242,14 @@ ul.messages {
 div#heatmap {
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: repeat(7, 10px);
-    grid-template-columns: repeat(52, 10px);
+    grid-template-rows: repeat(7, 8px);
+    grid-template-columns: repeat(52, 8px);
     gap: 4px;
 }
 
 div#heatmap div.cell {
-    background: darkseagreen;
-    border-radius: 2px;
+    background: hsl(210 20% 65%);
+    border-radius: 50%;
 }
 
 section {
