@@ -1,11 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-    --bg: #f8f8f8;
-    --primary: #382e2e;
-    --secondary: #6b6161;
-    --tertiary: #85adad;
-    --link: #47765f;
+    --color-bg: hsl(195 50% 97%);
+    --color-primary: hsl(195 50% 15%);
+    --color-secondary: hsl(195 25% 30%);
+    --color-accent: hsl(195 50% 87%);
 
     --space-xs: 0.5rem;
     --space-sm: 1rem;
@@ -18,28 +17,30 @@
 }
 
 html {
-    background: var(--bg);
+    background: var(--color-bg);
     color: var(--primary);
 }
 
 body {
     display: flex;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Work Sans", system-ui, sans-serif;
+    justify-content: center;
     line-height: var(--line-height-default);
     min-height: 100dvh;
 }
 
 body > .container {
     display: flex;
-    margin: 0 var(--space-lg);
+    margin: var(--space-xl) 0;
+    max-width: 960px;
     flex: 1;
 }
 
 aside.sidebar {
-    margin: var(--space-xl) 0;
     display: flex;
     flex-direction: column;
-    max-width: 220px;
+    max-width: 240px;
+    text-transform: lowercase;
     width: 100%;
 }
 
@@ -47,24 +48,23 @@ aside.sidebar header {
     margin-bottom: var(--space-lg);
 }
 
-aside.sidebar > nav {
+aside.sidebar nav {
     display: flex;
     flex: 1;
     flex-direction: column;
     justify-content: space-between;
 }
 
-aside.sidebar > nav a {
-    color: var(--secondary);
+aside.sidebar nav a {
+    color: var(--color-secondary);
     display: flex;
     align-items: center;
-    font-weight: 500;
-    padding: 4px 8px;
+    padding: 8px 12px;
     text-decoration: none;
-    width: 180px;
+    width: calc(240px - var(--space-md));
     position: relative;
-    border-radius: 8px;
-    left: -10px;
+    border-radius: 4px;
+    left: -12px;
     gap: var(--space-sm);
 }
 
@@ -73,7 +73,8 @@ aside.sidebar > nav a img {
 }
 
 aside.sidebar > nav a:hover {
-    background: #fdfdfd;
+    background: hsl(195 25% 93%);
+    color: var(--color-primary);
 }
 
 aside.sidebar > nav .top-options,
@@ -85,22 +86,16 @@ aside.sidebar > nav .bottom-options {
 
 main.content {
     width: 100%;
-    background: #fdfdfd;
-    border-radius: 8px 8px 0 0;
-    box-shadow: 0 2px 8px -6px;
-    margin-top: var(--space-md);
-    padding: var(--space-lg);
-}
-
-main.content > div.container {
-    margin: 0 auto;
-    max-width: 960px;
 }
 
 main.content h1 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin-bottom: var(--space-lg);
     margin-top: 0;
+}
+
+main.content h1::before {
+    content: "/";
 }
 
 body > main:has(div.hero) {
@@ -128,9 +123,9 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: Nunito, sans-serif;
-    font-weight: 600;
+    font-weight: 400;
     line-height: var(--line-height-compact);
+    text-transform: lowercase;
 }
 
 p {
@@ -139,13 +134,15 @@ p {
 
 a {
     color: var(--link);
+    font-family: "Roboto Mono", monospace;
 }
 
 a.title {
     color: var(--primary);
-    font-family: Nunito, sans-serif;
-    font-size: 20px;
-    font-weight: 500;
+    font-family: "Work Sans", system-ui, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: var(--line-height-compact);
     text-decoration: none;
 }
 
@@ -171,7 +168,7 @@ div.hero img {
 }
 
 div.hero > h1 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     margin-bottom: var(--space-md);
     margin-top: var(--space-xs);
 }
@@ -265,4 +262,36 @@ section h2 {
 
 p.empty {
     font-style: italic;
+}
+
+nav.notes-nav {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+a#new_note_button {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    float: right;
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-transform: lowercase;
+}
+
+input#note_search_input {
+    border: none;
+    font-size: 1rem;
+    padding: 8px 12px;
+    border-radius: 4px;
+    line-height: var(--line-height-default);
+    flex: 1;
+}
+
+input#note_search_input:focus {
+    outline-offset: 1px;
+    outline: 2px solid var(--link);
 }
