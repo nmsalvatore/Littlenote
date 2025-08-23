@@ -5,11 +5,11 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView
 
 
-class NotesHomeView(TemplateView):
+class AllNotesView(TemplateView):
     """
     View for the notes home page.
     """
-    template_name = "notes/notes_home.html"
+    template_name = "notes/all.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -49,4 +49,11 @@ class NewNoteView(TemplateView):
     """
     View for the new note page.
     """
-    template_name = "notes/new_note.html"
+    template_name = "notes/new.html"
+
+
+class NoteTagsView(TemplateView):
+    """
+    View for the note tags page.
+    """
+    template_name = "notes/tags.html"

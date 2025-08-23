@@ -1,0 +1,10 @@
+{% extends "notes/base.html" %}
+{% load static %}
+
+{% block subtitle %}
+    new note
+{% endblock subtitle %}
+
+{% block notes_content %}
+    <textarea name="new_note" id="new_note" placeholder="Write a note..."></textarea>
+{% endblock notes_content %}

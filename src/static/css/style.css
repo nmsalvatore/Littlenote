@@ -34,19 +34,20 @@ body {
 body > .container {
     display: flex;
     margin: var(--space-xl) 0;
-    max-width: 960px;
+    max-width: 840px;
     flex: 1;
 }
 
 aside.sidebar {
     display: flex;
     flex-direction: column;
-    max-width: 240px;
+    max-width: 210px;
     text-transform: lowercase;
     width: 100%;
 }
 
 aside.sidebar header {
+    line-height: var(--line-height-compact);
     margin-bottom: var(--space-lg);
 }
 
@@ -87,11 +88,13 @@ aside.sidebar > nav .bottom-options {
 }
 
 main.content {
+    display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
 main.content h1 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     margin-bottom: var(--space-lg);
     margin-top: 0;
 }
@@ -137,27 +140,29 @@ a {
 
 input,
 textarea {
-    border: 1px solid var(--color-accent-light);
+    border: 2px solid var(--color-accent-light);
     border-radius: 4px;
-    box-shadow: 0 2px 6px -6px;
+    box-shadow: 0 2px 10px -6px var(--color-accent-dark);
     color: var(--color-primary);
     background: var(--color-input-bg);
     line-height: var(--line-height-default);
-    padding: 10px 16px;
-    resize: none;
+    padding: var(--space-sm);
     width: 100%;
+}
+
+textarea {
+    resize: none;
 }
 
 input:focus,
 textarea:focus {
-    border: 1px solid var(--color-accent-dark);
     outline: none;
 }
 
 a.title {
     color: var(--primary);
     font-family: "Work Sans", system-ui, sans-serif;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 400;
     line-height: var(--line-height-compact);
     text-decoration: none;
@@ -283,20 +288,8 @@ p.empty {
 
 nav.notes-nav {
     display: flex;
-    gap: var(--space-sm);
-}
-
-a#new_note_button {
-    display: inline-flex;
-    align-items: center;
-    background: var(--color-accent-light);
-    color: var(--color-primary);
-    float: right;
-    font-size: 1rem;
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    text-transform: lowercase;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
 }
 
 input#note_search_input {
@@ -305,4 +298,21 @@ input#note_search_input {
 
 textarea#new_note {
     resize: none;
+}
+
+a.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    background: hsl(195 25% 92%);
+    color: var(--color-secondary);
+    font-size: 1rem;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-transform: lowercase;
+}
+
+a.nav-btn.active {
+    background: var(--color-accent-light);
+    color: var(--color-primary);
 }

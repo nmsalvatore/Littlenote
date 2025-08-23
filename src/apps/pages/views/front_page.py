@@ -30,7 +30,7 @@ class FrontPageView(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("notes:home")
+            return redirect("notes:all")
         return super().dispatch(request, *args, **kwargs)
 
     @method_decorator(ratelimit(

@@ -1,11 +1,12 @@
-{% extends "app.html" %}
+{% extends "notes/base.html" %}
 {% load static %}
 
 {% block subtitle %}
-    Notes
+    all notes
 {% endblock subtitle %}
 
-{% block app_content %}
+{% block notes_content %}
+
     <section>
         <h2>Contributions</h2>
         <div id="heatmap">
@@ -16,16 +17,10 @@
             {% endfor %}
         </div>
     </section>
-    <section>
-        <h2>Tags</h2>
-        <p class="empty">You don't have any tags.</p>
-    </section>
+
     <section>
         <h2>Recent Notes</h2>
         <p class="empty">You don't have any notes.</p>
     </section>
-    <nav class="notes-nav">
-        <input type="search" name="note_search_input" id="note_search_input" placeholder="Find a note...">
-        <a href="{% url 'notes:new_note' %}" id="new_note_button">New Note</a>
-    </nav>
-{% endblock app_content %}
+
+{% endblock notes_content %}
