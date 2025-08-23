@@ -2,21 +2,17 @@
 {% load static %}
 
 {% block subtitle %}
-    Dashboard
+    Notes
 {% endblock subtitle %}
 
 {% block app_content %}
-    <h1>Home</h1>
-    {% if messages %}
-        {% include "pages/partials/messages.html" %}
-    {% endif %}
     <section>
         <h2>Contributions</h2>
         <div id="heatmap">
             {% for day in days %}
                 <div class="cell"
-                     data-day="{{ day|date:'Y-m-d' }}"
-                     title="{{ day|date:'F j, Y' }}"></div>
+                    data-day="{{ day|date:'Y-m-d' }}"
+                    title="{{ day|date:'F j, Y' }}"></div>
             {% endfor %}
         </div>
     </section>
@@ -28,7 +24,8 @@
         <h2>Recent Notes</h2>
         <p class="empty">You don't have any notes.</p>
     </section>
-    <footer>
-        <small>&copy; 2025 Littlenote.</small>
-    </footer>
+    <nav class="notes-nav">
+        <input type="search" name="note_search_input" id="note_search_input" placeholder="Find a note...">
+        <a href="{% url 'notes:new_note' %}" id="new_note_button">New Note</a>
+    </nav>
 {% endblock app_content %}
