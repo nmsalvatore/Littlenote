@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-    --color-bg: hsl(195 50% 97%);
+    --color-bg: hsl(195 25% 97%);
     --color-primary: hsl(195 50% 15%);
     --color-secondary: hsl(195 25% 30%);
     --color-accent: hsl(195 50% 87%);
