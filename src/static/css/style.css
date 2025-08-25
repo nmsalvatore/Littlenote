@@ -2,11 +2,12 @@
 
 :root {
     --color-bg: hsl(195 25% 97%);
-    --color-input-bg: hsl(195 35% 98%);
+    --color-whitish: hsl(195 35% 99%);
     --color-primary: hsl(195 50% 15%);
-    --color-secondary: hsl(195 25% 30%);
+    --color-secondary: hsl(195 20% 35%);
+    --color-tertiary: hsl(195 10% 55%);
     --color-accent-light: hsl(195 50% 87%);
-    --color-accent-dark: hsl(195 50% 50%);
+    --color-accent-dark: hsl(195 50% 35%);
 
     --space-xs: 0.5rem;
     --space-sm: 1rem;
@@ -24,6 +25,7 @@ html {
 }
 
 body {
+    color: var(--color-primary);
     display: flex;
     font-family: "Work Sans", system-ui, sans-serif;
     justify-content: center;
@@ -41,9 +43,16 @@ body > .container {
 aside.sidebar {
     display: flex;
     flex-direction: column;
-    max-width: 210px;
+    max-width: 220px;
     text-transform: lowercase;
     width: 100%;
+
+    /* fixed sidebar for desktop view,
+    should be turned off for mobile */
+    position: fixed;
+    top: 0;
+    padding: var(--space-xl) 0;
+    height: 100%;
 }
 
 aside.sidebar header {
@@ -76,7 +85,7 @@ aside.sidebar > nav a img {
 }
 
 aside.sidebar > nav a:hover {
-    background: hsl(195 25% 93%);
+    background: hsl(195 25% 95%);
     color: var(--color-primary);
 }
 
@@ -91,12 +100,28 @@ main.content {
     display: flex;
     flex-direction: column;
     width: 100%;
+
+    /* offset content for desktop view
+    while sidebar is in fixed position*/
+    padding-left: 220px;
 }
 
-main.content h1 {
-    font-size: 1.2rem;
+main.content header.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: var(--space-lg);
-    margin-top: 0;
+}
+
+main.content header.content-header h1 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+main.content header.content-header a {
+    text-decoration: none;
+    text-transform: lowercase;
+    color: var(--color-accent-dark);
 }
 
 body > main:has(div.hero) {
@@ -138,25 +163,9 @@ a {
     font-family: "Roboto Mono", monospace;
 }
 
-input,
-textarea {
-    border: 2px solid var(--color-accent-light);
-    border-radius: 4px;
-    box-shadow: 0 2px 10px -6px var(--color-accent-dark);
-    color: var(--color-primary);
-    background: var(--color-input-bg);
-    line-height: var(--line-height-default);
-    padding: var(--space-sm);
-    width: 100%;
-}
-
-textarea {
-    resize: none;
-}
-
-input:focus,
-textarea:focus {
-    outline: none;
+input::placeholder,
+textarea::placeholder {
+    opacity: 0.7;
 }
 
 a.title {
@@ -266,13 +275,29 @@ div#heatmap {
     gap: 4px;
 }
 
-div#heatmap div.cell {
-    background: hsl(210 20% 65%);
+div#heatmap .cell {
+    background: hsl(195 20% 90%);
     border-radius: 50%;
 }
 
+div#heatmap .cell.level-1 {
+    background: hsl(195 50% 75%);
+}
+
+div#heatmap .cell.level-2 {
+    background: hsl(195 50% 55%);
+}
+
+div#heatmap .cell.level-3 {
+    background: hsl(195 50% 60%);
+}
+
+div#heatmap .cell.null {
+    display: none;
+}
+
 section {
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-md);
 }
 
 section h2 {
@@ -293,7 +318,13 @@ nav.notes-nav {
 }
 
 input#note_search_input {
-    flex: 1;
+    background: var(--color-whitish);
+    border: 1px solid var(--color-accent-light);
+    padding: var(--space-sm);
+    box-shadow: 0 2px 8px -6px;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: var(--space-sm);
 }
 
 textarea#new_note {
@@ -315,4 +346,86 @@ a.nav-btn {
 a.nav-btn.active {
     background: var(--color-accent-light);
     color: var(--color-primary);
+}
+
+form#note_form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-accent-light);
+    border-radius: 4px;
+    box-shadow: 0 2px 10px -6px var(--color-accent-dark);
+    color: var(--color-primary);
+    background: var(--color-whitish);
+    line-height: var(--line-height-default);
+    padding: var(--space-sm);
+    width: 100%;
+    gap: var(--space-sm);
+    flex: 1;
+}
+
+form#note_form textarea,
+form#note_form input {
+    background: inherit;
+    border: none;
+    color: inherit;
+    line-height: var(--line-height-default);
+}
+
+form#note_form textarea:focus,
+form#note_form input:focus {
+    outline: none;
+}
+
+form#note_form textarea {
+    color: var(--color-secondary);
+    resize: none;
+    width: 100%;
+    min-height: 100px;
+    field-sizing: content;
+    flex: 1;
+}
+
+button#note_submit_button {
+    display: block;
+    width: fit-content;
+    align-self: flex-end;
+    background: inherit;
+    border: none;
+    padding: 8px 16px;
+    color: var(--color-accent-dark);
+    border-radius: 4px;
+    font-family: "Roboto Mono";
+    text-transform: lowercase;
+    cursor: pointer;
+}
+
+button#note_submit_button:hover {
+    color: var(--color-primary);
+}
+
+ul.note-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul.note-list li.note-list-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-accent-light);
+    padding-bottom: var(--space-sm);
+    align-items: center;
+}
+
+ul.note-list li.note-list-item:last-child {
+    border-bottom: none;
+}
+
+ul.note-list li.note-list-item time {
+    color: var(--color-tertiary);
+    font-family: "Roboto Mono";
+    font-size: 0.8rem;
+    text-transform: lowercase;
 }

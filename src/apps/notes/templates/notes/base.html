@@ -3,7 +3,12 @@
 
 {% block app_content %}
 
-    {% include "notes/partials/nav.html" %}
+    <header class="content-header">
+        <h1>/notes</h1>
+
+        {% block app_nav_button %}
+        {% endblock app_nav_button %}
+    </header>
 
     {% block notes_content %}
     {% endblock notes_content %}

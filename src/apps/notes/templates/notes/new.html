@@ -5,6 +5,17 @@
     new note
 {% endblock subtitle %}
 
+{% block app_nav_button %}
+    <a href="{% url 'notes:all' %}">&larr; Back</a>
+{% endblock %}
+
 {% block notes_content %}
-    <textarea name="new_note" id="new_note" placeholder="Write a note..."></textarea>
+
+    <form method="post" id="note_form">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Title (optional)">
+        <textarea name="content" id="note_content" placeholder="Write a note..."></textarea>
+        <button type="submit" id="note_submit_button">Publish</button>
+    </form>
+
 {% endblock notes_content %}

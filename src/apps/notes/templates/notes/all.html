@@ -2,25 +2,40 @@
 {% load static %}
 
 {% block subtitle %}
-    all notes
-{% endblock subtitle %}
+    notes
+{% endblock %}
+
+{% block app_nav_button %}
+    <a href="{% url 'notes:new' %}">&plus; New Note</a>
+{% endblock %}
 
 {% block notes_content %}
-
     <section>
-        <h2>Contributions</h2>
         <div id="heatmap">
             {% for day in days %}
-                <div class="cell"
-                    data-day="{{ day|date:'Y-m-d' }}"
-                    title="{{ day|date:'F j, Y' }}"></div>
+                <div class="cell {{ day.css_class }}"
+                    data-day="{{ day.date|date:'Y-m-d' }}"
+                    title="{{ day.count }} contributions on {{ day.date|date:'F j, Y' }}"></div>
             {% endfor %}
         </div>
     </section>
 
     <section>
-        <h2>Recent Notes</h2>
-        <p class="empty">You don't have any notes.</p>
+        <input type="search" placeholder="Find a note..." id="note_search_input">
+        <ul class="note-list">
+            {% for note in notes %}
+            <li class="note-list-item">
+                <span class="note-list-item-title">
+                    {% if note.title %}
+                        {{ note.title }}
+                    {% else %}
+                        {{ note.content|truncatewords:5 }}
+                    {% endif %}
+                </span>
+                <time datetime="{{ note.created_at|date:'Y-m-d' }}">{{ note.created_at|date:"M j, Y" }}</time>
+            </li>
+            {% endfor %}
+        </ul>
     </section>
 
-{% endblock notes_content %}
+{% endblock %}
