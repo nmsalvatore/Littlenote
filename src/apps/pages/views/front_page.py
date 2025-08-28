@@ -119,10 +119,10 @@ class FrontPageView(TemplateView):
 
             if request.headers.get("HX-Request"):
                 response = HttpResponse()
-                response["HX-Redirect"] = "/dashboard/"
+                response["HX-Redirect"] = "/notes/"
                 return response
 
-            return redirect("pages:dashboard")
+            return redirect("notes:all")
 
         except Ratelimited:
             messages.error(request, ErrorMessages.TOO_MANY_PASSCODE_ATTEMPTS)
