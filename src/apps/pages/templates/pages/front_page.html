@@ -1,24 +1,40 @@
 {% extends "base.html" %}
+
 {% load static %}
 
+
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="{% static 'pages/css/front_page.css' %}">
+
+{% endblock %}
+
+
 {% block page_content %}
-    <main>
-        <div class="hero">
-            <img src="{% static 'images/lilnote.png' %}"
-                 alt="Cute little note with arms and legs.">
+
+    <div class="container">
+        <header>
             <h1>Littlenote</h1>
+        </header>
+
+        <main>
             {% if passcode_sent %}
                 {% include 'pages/partials/passcode_form.html' %}
             {% else %}
                 {% include 'pages/partials/email_form.html' %}
             {% endif %}
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 Littlenote.</p>
-    </footer>
-{% endblock page_content %}
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Littlenote.</p>
+        </footer>
+    </div>
+
+{% endblock %}
+
 
 {% block scripts %}
+
     <script src="{% static 'js/htmx.min.js' %}"></script>
-{% endblock scripts %}
+
+{% endblock %}

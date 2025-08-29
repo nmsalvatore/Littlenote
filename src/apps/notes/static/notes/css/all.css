@@ -1,0 +1,75 @@
+#note_search_input {
+    border: 1px solid var(--color-light);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--space-sm);
+    padding: 8px 12px;
+    width: 100%;
+}
+
+#note_search_input:focus {
+    outline: none;
+}
+
+#heatmap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 8px);
+    grid-template-columns: repeat(52, 8px);
+    gap: 4px;
+}
+
+#heatmap .cell {
+    background: hsl(195 25% 90%);
+    border-radius: 50%;
+}
+
+#heatmap .cell.level-1 {
+    background: hsl(195 50% 70%);
+}
+
+#heatmap .cell.level-2 {
+    background: hsl(195 50% 50%);
+}
+
+#heatmap .cell.level-3 {
+    background: hsl(195 50% 30%);
+}
+
+#heatmap .cell.null {
+    display: none;
+}
+
+.note-list {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.note-list li.note-list-item {
+    border-bottom: 1px solid var(--color-light);
+}
+
+.note-list li.note-list-item a {
+    color: var(--color-dark);
+    font-family: inherit;
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-sm) 0;
+    align-items: center;
+    text-decoration: none;
+}
+
+.note-list li.note-list-item a:hover > span {
+    text-decoration: underline;
+}
+
+.note-list li.note-list-item:last-child {
+    border-bottom: none;
+}
+
+.note-list li.note-list-item time {
+    color: var(--color-medium);
+    font-family: "Roboto Mono";
+    font-size: var(--font-size-small);
+}

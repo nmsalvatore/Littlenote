@@ -1,0 +1,29 @@
+{% extends "notes/base.html" %}
+
+{% load static %}
+{% load markdown_extras %}
+
+
+{% block subtitle %}
+    note detail
+{% endblock subtitle %}
+
+
+{% block notes_stylesheets %}
+    <link rel="stylesheet" href="{% static 'notes/css/detail.css' %}">
+{% endblock %}
+
+
+{% block app_nav_button %}
+    <a href="{% url 'notes:all' %}">&larr; Back</a>
+{% endblock %}
+
+
+{% block notes_content %}
+    <section>
+        <div class="note-detail">
+            <h2 class="note-title">{{ note.title }}</h2>
+            <div class="note-content">{{ note.content | markdown | safe }}</div>
+        </div>
+    </section>
+{% endblock notes_content %}

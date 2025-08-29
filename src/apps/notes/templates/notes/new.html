@@ -1,21 +1,28 @@
 {% extends "notes/base.html" %}
+
 {% load static %}
+
 
 {% block subtitle %}
     new note
 {% endblock subtitle %}
 
+
+{% block notes_stylesheets %}
+    <link rel="stylesheet" href="{% static 'notes/css/new.css' %}">
+{% endblock %}
+
+
 {% block app_nav_button %}
     <a href="{% url 'notes:all' %}">&larr; Back</a>
 {% endblock %}
 
-{% block notes_content %}
 
+{% block notes_content %}
     <form method="post" id="note_form">
         {% csrf_token %}
         <input type="text" name="title" placeholder="Title (optional)">
         <textarea name="content" id="note_content" placeholder="Write a note..."></textarea>
         <button type="submit" id="note_submit_button">Publish</button>
     </form>
-
 {% endblock notes_content %}

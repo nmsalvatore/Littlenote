@@ -1,6 +1,6 @@
 <form method="post" hx-post="/" hx-swap="outerHTML" id="continue_with_email_form">
     {% csrf_token %}
-    <input type="email" name="email" placeholder="Enter your email address" id="continue_with_email_input" required>
+    <input type="email" name="email" placeholder="Enter your email address" id="continue_with_email_input" autocomplete="off" required>
     <button type="submit" id="continue_with_email_button">Continue with email</button>
 </form>
 

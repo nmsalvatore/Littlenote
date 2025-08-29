@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django.views.generic.base import TemplateView
 
 from .models import Note
@@ -28,6 +28,7 @@ class AllNotesView(TemplateView):
 
         note_counts = defaultdict(int)
         notes = Note.objects.filter(
+            author=self.request.user,
             created_at__date__gte=first_calendar_day.date(),
             created_at__date__lte=last_calendar_day.date()
         )
@@ -43,9 +44,9 @@ class AllNotesView(TemplateView):
                 css_class = "null"
             elif count == 0:
                 css_class = "level-0"
-            elif count <= 2:
+            elif count <= 1:
                 css_class = "level-1"
-            elif count <= 4:
+            elif count <= 2:
                 css_class = "level-2"
             else:
                 css_class = "level-3"
@@ -57,7 +58,7 @@ class AllNotesView(TemplateView):
             })
             current_day += timedelta(days=1)
 
-        notes = Note.objects.all()
+        notes = Note.objects.filter(author=self.request.user)
 
         context["days"] = days
         context["notes"] = notes
@@ -89,3 +90,11 @@ class NewNoteView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class NoteDetailView(DetailView):
+    """
+    View for a single note.
+    """
+    model = Note
+    template_name = "notes/detail.html"
