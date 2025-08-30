@@ -4,19 +4,17 @@ a.title {
     text-decoration: none;
 }
 
+body > .container {
+    flex-direction: row;
+}
+
 aside.sidebar {
     display: flex;
     flex-direction: column;
     max-width: 220px;
     text-transform: lowercase;
     width: 100%;
-
-    /* fixed sidebar for desktop view,
-    should be turned off for mobile */
-    position: fixed;
-    top: 0;
-    padding: var(--space-xl) 0;
-    height: 100%;
+    height: calc(100dvh - (var(--space-xl) * 2));
 }
 
 aside.sidebar header {
@@ -58,12 +56,6 @@ aside.sidebar > nav .bottom-options {
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
-}
-
-main.content {
-    /* offset content for desktop view
-    while sidebar is in fixed position*/
-    padding-left: 220px;
 }
 
 main.content header h1 {

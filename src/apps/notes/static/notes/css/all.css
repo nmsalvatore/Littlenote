@@ -51,7 +51,7 @@
 }
 
 .note-list li.note-list-item a {
-    color: var(--color-dark);
+    color: var(--color-medium);
     font-family: inherit;
     display: flex;
     justify-content: space-between;
