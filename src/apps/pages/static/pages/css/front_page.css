@@ -1,3 +1,9 @@
+.container > header,
+.container > footer {
+    text-align: center;
+    text-transform: lowercase;
+}
+
 main:has(#continue_with_email_form) {
     align-items: center;
     justify-content: center;

@@ -42,11 +42,13 @@ aside.sidebar nav a {
     width: calc(240px - var(--space-md));
 }
 
-aside.sidebar > nav a img {
+aside.sidebar > nav a img,
+form img:has(+ button[type="submit"]) {
     height: 18px;
 }
 
-aside.sidebar > nav a:hover {
+aside.sidebar > nav a:hover,
+#signout_form:hover {
     background: hsl(195 50% 92%);
     color: var(--color-dark);
 }
@@ -71,4 +73,21 @@ main.content header a {
 
 main.content header a:hover {
     color: var(--color-dark);
+}
+
+#signout_form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    left: -12px;
+    padding: 8px 12px;
+    position: relative;
+}
+
+#signout_form button {
+    cursor: pointer;
+    font-family: var(--font-family-mono);
+    border: none;
+    background: none;
+    text-transform: lowercase;
 }
