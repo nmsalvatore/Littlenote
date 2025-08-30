@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "src.apps.accounts",
     "src.apps.pages",
     "src.apps.notes",
 ]

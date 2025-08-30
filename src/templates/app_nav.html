@@ -20,9 +20,9 @@
         </a>
     </div>
     <div class="bottom-options">
-        <a href="/">
-            <img src="{% static 'icons/settings.svg' %}" alt="Gear icon">
-            Settings
-        </a>
+        <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Sign out</button>
+        </form>
     </div>
 </nav>
