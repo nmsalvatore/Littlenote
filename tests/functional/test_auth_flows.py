@@ -41,7 +41,7 @@ class AuthFlowTest(LiveServerTestCase):
 
         self.browser.get(self.live_server_url)
         self.interactions.login_returning_user(self.user_email)
-        self.wait.until(EC.url_contains("/dashboard/"))
+        self.wait.until(EC.url_contains("/notes/"))
 
     def test_signup_and_login(self):
         """
@@ -49,4 +49,4 @@ class AuthFlowTest(LiveServerTestCase):
         """
         self.browser.get(self.live_server_url)
         self.interactions.signup_and_login_new_user(self.user_email)
-        self.wait.until(EC.url_contains("/dashboard/"))
+        self.wait.until(EC.url_contains("/notes/"))

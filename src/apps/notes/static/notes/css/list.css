@@ -1,0 +1,57 @@
+ul.note-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    list-style-type: none;
+}
+
+ul.note-list > li {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+ul.note-list > li a {
+    font-weight: 600;
+}
+
+ul.note-list > li time {
+    width: 10ch;
+}
+
+div.actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+div.actions a {
+    background: var(--color-overlay);
+    border: 1px solid var(--color-overlay);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    text-decoration: none;
+    border-radius: 4px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+}
+
+form:has(#note_search_input) {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+#note_search_input {
+    background: var(--color-whitish);
+    border: 1px solid var(--color-input-border);
+    border-radius: 4px;
+    width: 100%;
+    padding: var(--spacing-xs);
+}
+
+#note_search_input:focus {
+    outline: none;
+}
+
+.pagination {
+    margin-top: var(--spacing-xs);
+}

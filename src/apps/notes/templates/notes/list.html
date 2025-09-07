@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'notes/css/list.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="actions">
+        <form action="">
+            <input type="search" placeholder="Search for notes..." id="note_search_input">
+        </form>
+        <a href="{% url 'notes:new' %}">New Note</a>
+    </div>
+    <ul class="note-list">
+        {% for note in notes %}
+            <li>
+                {% with note.created_at|date:'Y-m-d' as formatted_date %}
+                    <time datetime="{{ formatted_date }}">{{ note.created_at|date:"M j 'y" }}</time>
+                    <a href="{% url 'notes:detail' pk=note.id %}">
+                        {% if note.title %}
+                            {{ note.title }}
+                        {% else %}
+                            {{ note.content|truncatewords:5 }}
+                        {% endif %}
+                    </a>
+                {% endwith %}
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&larr; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &rarr;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}

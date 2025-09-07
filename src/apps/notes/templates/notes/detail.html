@@ -1,29 +1,25 @@
-{% extends "notes/base.html" %}
-
+{% extends "base.html" %}
 {% load static %}
 {% load markdown_extras %}
 
-
-{% block subtitle %}
-    note detail
-{% endblock subtitle %}
-
-
-{% block notes_stylesheets %}
+{% block stylesheets %}
     <link rel="stylesheet" href="{% static 'notes/css/detail.css' %}">
 {% endblock %}
 
-
-{% block app_nav_button %}
-    <a href="{% url 'notes:all' %}">&larr; Back</a>
+{% block nav_button %}
+    <a href="{% url 'notes:list' %}">
+        ../
+    </a>
 {% endblock %}
 
-
-{% block notes_content %}
-    <section>
-        <div class="note-detail">
-            <h2 class="note-title">{{ note.title }}</h2>
-            <div class="note-content">{{ note.content | markdown | safe }}</div>
-        </div>
+{% block main %}
+    <section class="note-detail">
+        <header>
+            {% if note.title %}
+                <h1 class="note-title">{{ note.title }}</h1>
+            {% endif %}
+            <time datetime="">{{ note.created_at }}</time>
+        </header>
+        <div class="note-content">{{ note.content | markdown | safe }}</div>
     </section>
-{% endblock notes_content %}
+{% endblock %}

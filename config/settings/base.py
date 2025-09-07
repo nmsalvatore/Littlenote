@@ -13,6 +13,12 @@ if READ_DOT_ENV_FILE:
     env.read_env(BASE_DIR / ".env")
 
 
+# Context
+# ------------------------------------------------------------------------------
+
+SITE_TITLE = "Littlenote"
+
+
 # General
 # ------------------------------------------------------------------------------
 
@@ -79,6 +85,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "config.context_processors.site_settings",
             ],
         },
     },
