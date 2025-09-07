@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "app.html" %}
 {% load static %}
 {% load markdown_extras %}
 
-{% block stylesheets %}
+{% block app_stylesheets %}
     <link rel="stylesheet" href="{% static 'notes/css/detail.css' %}">
 {% endblock %}
 
@@ -12,7 +12,7 @@
     </a>
 {% endblock %}
 
-{% block main %}
+{% block app_content %}
     <section class="note-detail">
         <header>
             {% if note.title %}

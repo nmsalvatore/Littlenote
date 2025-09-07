@@ -20,18 +20,19 @@ ul.note-list > li time {
 
 div.actions {
     display: flex;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 div.actions a {
-    background: var(--color-overlay);
-    border: 1px solid var(--color-overlay);
-    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--color-action);
+    border: 1px solid var(--color-lighter);
+    padding: 6px 16px;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 6px;
     line-height: 1;
     display: inline-flex;
     align-items: center;
+    color: white;
 }
 
 form:has(#note_search_input) {
@@ -42,10 +43,10 @@ form:has(#note_search_input) {
 
 #note_search_input {
     background: var(--color-whitish);
-    border: 1px solid var(--color-input-border);
-    border-radius: 4px;
+    border: 1px solid var(--color-light);
+    border-radius: 6px;
     width: 100%;
-    padding: var(--spacing-xs);
+    padding: 6px 12px;
 }
 
 #note_search_input:focus {
@@ -53,5 +54,5 @@ form:has(#note_search_input) {
 }
 
 .pagination {
-    margin-top: var(--spacing-xs);
+    margin-top: var(--spacing-md);
 }

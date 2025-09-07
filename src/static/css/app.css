@@ -1,0 +1,91 @@
+/* admin bar styles */
+
+#admin_nav {
+    background: var(--color-lighter);
+    padding: var(--spacing-xs);
+}
+
+#admin_nav button[type="submit"] {
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: var(--color-dull);
+    text-underline-offset: 4px;
+}
+
+#admin_nav > .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#admin_nav > .container {
+    margin: auto;
+    max-width: 540px;
+    width: 100%;
+}
+
+/* app-level header styles */
+
+body > header h1 {
+    margin-bottom: 0;
+}
+
+body > header a {
+    display: flex;
+    gap: 1ch;
+    text-decoration: none;
+}
+
+body > header a .text {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: var(--color-dull);
+}
+
+body > header > nav {
+    display: flex;
+    text-transform: lowercase;
+}
+
+.nav-item {
+    color: var(--color-dull);
+    display: inline-flex;
+}
+
+.nav-item.active > a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: var(--spacing-xs);
+    text-decoration-thickness: 1px;
+    font-weight: 500;
+}
+
+.nav-item > a {
+    color: inherit;
+}
+
+.nav-item:not(.nav-item:last-child)::after {
+    content: "/";
+    padding: 0 1ch;
+}
+
+/* app-level code styles */
+
+pre,
+code:not(pre code) {
+    background: var(--color-light);
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+pre {
+    overflow: auto;
+    padding: var(--spacing-sm);
+    margin: var(--spacing-sm) 0;
+}
+
+code {
+    padding: 2px 4px;
+}

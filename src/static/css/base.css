@@ -1,11 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
 :root {
     /* colors */
-    --color-bg: hsl(60 15% 93%);
-    --color-primary: hsl(150 15% 15%);
-    --color-secondary: hsl(150 5% 60%);
-    --color-overlay: rgba(0, 0, 0, 0.03);
-    --color-input-border: rgba(0, 0, 0, 0.12);
     --color-whitish: hsl(150 20% 96%);
+    --color-light: hsl(60 8% 87%);
+    --color-lighter: hsl(60 10% 90%);
+    --color-bg: hsl(60 15% 93%);
+    --color-primary: hsl(150 15% 10%);
+    --color-dull: hsl(150 5% 50%);
+    --color-action: hsl(150 20% 45%);
 
     /* spacing */
     --spacing-xs: 1ch;
@@ -18,7 +21,7 @@
 html {
     background: var(--color-bg);
     color: var(--color-primary);
-    font-family: ui-monospace, monospace;
+    font-family: "Roboto Mono", ui-monospace, monospace;
     font-size: 15px;
 }
 
@@ -31,17 +34,6 @@ body {
     line-height: 1.7;
 }
 
-#admin_nav {
-    background: var(--color-overlay);
-    padding: var(--spacing-xs);
-}
-
-#admin_nav > .container {
-    display: flex;
-    justify-content: space-between;
-}
-
-#admin_nav > .container,
 body > header,
 body > main,
 body > footer {
@@ -109,77 +101,14 @@ a {
     color: inherit;
     text-underline-offset: 4px;
     text-decoration-style: dotted;
-    text-decoration-color: var(--color-secondary);
+    text-decoration-color: var(--color-dull);
 }
 
 time {
-    color: var(--color-secondary);
+    color: var(--color-dull);
 }
 
 *::placeholder {
-    color: var(--color-secondary);
+    color: var(--color-dull);
     opacity: 1;
-}
-
-/* header-specific styles */
-
-body > header h1 {
-    margin-bottom: 0;
-}
-
-body > header a {
-    display: flex;
-    gap: 1ch;
-    text-decoration: none;
-}
-
-body > header a .text {
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-decoration-color: var(--color-secondary);
-}
-
-body > header > nav {
-    display: flex;
-    text-transform: lowercase;
-}
-
-.nav-item {
-    color: var(--color-secondary);
-    display: inline-flex;
-}
-
-.nav-item.active > a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: 6px;
-    text-decoration-thickness: 2px;
-}
-
-.nav-item > a {
-    color: inherit;
-}
-
-.nav-item:not(.nav-item:last-child)::after {
-    content: "/";
-    padding: 0 1ch;
-}
-
-/* code styles */
-
-pre,
-code:not(pre code) {
-    background: var(--color-overlay);
-    border-radius: 4px;
-    font-size: 0.875rem;
-}
-
-pre {
-    overflow: auto;
-    padding: var(--spacing-sm);
-    margin: var(--spacing-sm) 0;
-}
-
-code {
-    padding: 2px 4px;
 }

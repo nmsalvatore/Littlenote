@@ -7,46 +7,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
 	<link rel="stylesheet" href="{% static 'css/base.css' %}">
+
 	{% block stylesheets %}
 	{% endblock %}
+
 	<title>{{ SITE_TITLE }}</title>
 </head>
 <body>
-    <nav id="admin_nav">
-        <div class="container">
-            <span>@{{ user }}</span>
-            <a href="{% url 'accounts:logout' %}">Sign out</a>
-        </div>
-    </nav>
-    <header>
-        <div>
-            <h1>Littlenote</h1>
-            {% block nav_button %}
-            {% endblock %}
-        </div>
-        <nav>
-            <div class="nav-item active">
-                <a href="{% url 'notes:list' %}">Notes</a>
-            </div>
-            <div class="nav-item">
-                <a href="">Journal</a>
-            </div>
-            <div class="nav-item">
-                <a href="">Todos</a>
-            </div>
-            <div class="nav-item">
-                <a href="">Calendar</a>
-            </div>
-        </nav>
-    </header>
-    <main>
-        {% block main %}
-        {% endblock %}
-    </main>
-    <footer>
-        {% now "Y" as current_year %}
-        <p>&copy; 2025{% if current_year != "2025" %}-{{ current_year }}{% endif %} {{ SITE_TITLE }}.</p>
-    </footer>
+    {% block content %}
+    {% endblock %}
 
     {% block scripts %}
     {% endblock %}

@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "app.html" %}
 {% load static %}
 
-{% block stylesheets %}
+{% block app_stylesheets %}
     <link rel="stylesheet" href="{% static 'notes/css/list.css' %}">
 {% endblock %}
 
-{% block main %}
+{% block app_content %}
     <div class="actions">
         <form action="">
             <input type="search" placeholder="Search for notes..." id="note_search_input">

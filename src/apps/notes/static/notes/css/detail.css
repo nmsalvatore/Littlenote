@@ -1,5 +1,5 @@
 .note-detail {
-    background: var(--color-overlay);
+    background: var(--color-lighter);
     border-radius: 4px;
     display: flex;
     flex-direction: column;
@@ -33,6 +33,6 @@
 
 .note-content hr {
     border: none;
-    border-bottom: 1px dashed var(--color-secondary);
+    border-bottom: 1px dashed var(--color-dull);
     margin-bottom: var(--spacing-sm);
 }

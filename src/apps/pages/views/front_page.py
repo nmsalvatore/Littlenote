@@ -30,7 +30,7 @@ class FrontPageView(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("notes:all")
+            return redirect("notes:list")
         return super().dispatch(request, *args, **kwargs)
 
     @method_decorator(ratelimit(
@@ -122,7 +122,7 @@ class FrontPageView(TemplateView):
                 response["HX-Redirect"] = "/notes/"
                 return response
 
-            return redirect("notes:all")
+            return redirect("notes:list")
 
         except Ratelimited:
             messages.error(request, ErrorMessages.TOO_MANY_PASSCODE_ATTEMPTS)

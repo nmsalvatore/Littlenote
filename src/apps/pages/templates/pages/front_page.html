@@ -1,40 +1,21 @@
 {% extends "base.html" %}
-
 {% load static %}
 
-
 {% block stylesheets %}
-
     <link rel="stylesheet" href="{% static 'pages/css/front_page.css' %}">
-
 {% endblock %}
 
+{% block content %}
+    <header>
+        <h1>{{ SITE_TITLE }}</h1>
+    </header>
+    <main>
+        {% if passcode_sent %}
+            {% include 'pages/partials/passcode_form.html' %}
+        {% else %}
+            {% include 'pages/partials/email_form.html' %}
+        {% endif %}
+    </main>
 
-{% block page_content %}
-
-    <div class="container">
-        <header>
-            <h1>Littlenote</h1>
-        </header>
-
-        <main>
-            {% if passcode_sent %}
-                {% include 'pages/partials/passcode_form.html' %}
-            {% else %}
-                {% include 'pages/partials/email_form.html' %}
-            {% endif %}
-        </main>
-
-        <footer>
-            <p>&copy; 2025 Littlenote.</p>
-        </footer>
-    </div>
-
-{% endblock %}
-
-
-{% block scripts %}
-
-    <script src="{% static 'js/htmx.min.js' %}"></script>
-
+    {% include "partials/footer.html" %}
 {% endblock %}

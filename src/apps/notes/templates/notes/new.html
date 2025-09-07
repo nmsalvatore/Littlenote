@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "app.html" %}
 {% load static %}
 
 {% block subtitle %}
     new note
 {% endblock subtitle %}
 
-{% block stylesheets %}
+{% block app_stylesheets %}
     <link rel="stylesheet" href="{% static 'notes/css/new.css' %}">
 {% endblock %}
 
@@ -15,7 +15,7 @@
     </a>
 {% endblock %}
 
-{% block main %}
+{% block app_content %}
     <form method="post" id="note_form">
         {% csrf_token %}
         <input type="text" name="title" placeholder="Title (optional)">

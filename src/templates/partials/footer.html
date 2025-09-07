@@ -1,0 +1,4 @@
+<footer>
+    {% now "Y" as current_year %}
+    <p>&copy; 2025{% if current_year != "2025" %}-{{ current_year }}{% endif %} {{ SITE_TITLE }}.</p>
+</footer>
