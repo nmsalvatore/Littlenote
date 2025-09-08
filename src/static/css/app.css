@@ -11,7 +11,7 @@
     cursor: pointer;
     text-decoration: underline;
     text-decoration-style: dotted;
-    text-decoration-color: var(--color-dull);
+    text-decoration-color: var(--color-action);
     text-underline-offset: 4px;
 }
 
@@ -29,6 +29,7 @@
 /* app-level header styles */
 
 body > header h1 {
+    font-size: 1.5rem;
     margin-bottom: 0;
 }
 
@@ -59,7 +60,8 @@ body > header > nav {
     text-decoration: underline;
     text-underline-offset: var(--spacing-xs);
     text-decoration-thickness: 1px;
-    font-weight: 500;
+    text-decoration-style: double;
+    font-weight: 600;
 }
 
 .nav-item > a {
