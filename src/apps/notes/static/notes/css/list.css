@@ -1,7 +1,7 @@
 ul.note-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
     list-style-type: none;
 }
 
@@ -25,7 +25,7 @@ div.actions {
 
 div.actions a {
     background: var(--color-action);
-    border: 1px solid var(--color-lighter);
+    border: 2px solid var(--color-light);
     padding: 6px 16px;
     text-decoration: none;
     border-radius: 6px;
@@ -54,5 +54,18 @@ form:has(#note_search_input) {
 }
 
 .pagination {
-    margin-top: var(--spacing-md);
+    display: flex;
+    margin-top: var(--spacing-sm);
+}
+
+.pagination:has(.previous-button) {
+    justify-content: flex-start;
+}
+
+.pagination:has(.next-button) {
+    justify-content: flex-end;
+}
+
+.pagination:has(.next-button):has(.previous-button) {
+    justify-content: space-between;
 }
