@@ -30,6 +30,7 @@
     flex: 1;
     resize: none;
     field-sizing: content;
+    padding-bottom: var(--spacing-lg);
 }
 
 #note_form button[type="submit"] {
