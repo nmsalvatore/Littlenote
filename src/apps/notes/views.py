@@ -11,7 +11,7 @@ class NotesListView(ListView):
     model = Note
     context_object_name = "notes"
     template_name = "notes/list.html"
-    paginate_by = 10
+    paginate_by = 25
 
 
 class NewNoteView(CreateView):
