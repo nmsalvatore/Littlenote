@@ -88,6 +88,6 @@ pre {
     margin: var(--spacing-sm) 0;
 }
 
-code {
+code:not(pre code) {
     padding: 2px 4px;
 }
