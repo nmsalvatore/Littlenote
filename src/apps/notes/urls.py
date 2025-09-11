@@ -6,6 +6,6 @@ app_name = "notes"
 
 urlpatterns = [
     path("", NotesListView.as_view(), name="list"),
-    path("<int:pk>/", NoteDetailView.as_view(), name="detail"),
+    path("<str:pk>/", NoteDetailView.as_view(), name="detail"),
     path("new/", NewNoteView.as_view(), name="new")
 ]

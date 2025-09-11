@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models.fields import uuid
 from django.utils import timezone
 
 
@@ -14,6 +15,7 @@ class Note(models.Model):
     """
     Model for notes.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timestamp_id = models.CharField(max_length=14, default=generate_timestamp)
     title = models.CharField(max_length=255, blank=True)
     content = models.TextField()

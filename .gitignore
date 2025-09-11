@@ -12,6 +12,9 @@ wheels/
 # Virtual environments
 .venv
 
+# Fixtures
+fixtures/
+
 # Databases
 *.sqlite3
 *.sqlite
