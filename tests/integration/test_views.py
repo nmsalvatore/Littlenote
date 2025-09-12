@@ -57,6 +57,15 @@ class NoteListViewTestCase(TestCase):
         response = self.client.get(self.note_list_url)
         self.assertRedirects(response, "/?next=/notes/")
 
+    def test_list_requires_login(self):
+        """
+        Test that the note list can only be accessed by authenticated
+        users.
+        """
+        self.client.force_login(self.test_user)
+        response = self.client.get(self.note_list_url)
+        self.assertEqual(response.status_code, 200)
+
     def test_list_shows_only_user_notes(self):
         """
         Test that the note list only shows notes authored by the
