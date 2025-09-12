@@ -21,7 +21,7 @@ class NotesListView(LoginRequiredMixin, ListView):
         return Note.objects.filter(author=user)
 
 
-class NewNoteView(CreateView):
+class NewNoteView(LoginRequiredMixin, CreateView):
     """
     View for the new note page.
     """

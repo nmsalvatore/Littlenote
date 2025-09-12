@@ -96,6 +96,18 @@ class NoteListViewTests(NoteTestCase):
         self.assertNotIn("Strange note #3", response.text)
 
 
+class NewNoteViewTests(TestCase):
+    """
+    Integration tests for NewNoteView.
+    """
+    def test_new_note_requires_auth(self):
+        """
+        Test that new note page only accessible to authenticated users.
+        """
+        response = self.client.get(reverse("notes:new"))
+        self.assertRedirects(response, "/?next=/notes/new/")
+
+
 class NoteDetailViewTests(NoteTestCase):
     """
     Integration tests for NoteDetailView.
