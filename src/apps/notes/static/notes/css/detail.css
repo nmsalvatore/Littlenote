@@ -36,3 +36,13 @@
     border-bottom: 1px dashed var(--color-dull);
     margin-bottom: var(--spacing-sm);
 }
+
+#delete_note_dialog {
+    margin: auto;
+    position: relative;
+    top: calc(-1 * var(--spacing-xl));
+}
+
+#delete_note_dialog .dialog-content {
+    padding: var(--spacing-md);
+}
