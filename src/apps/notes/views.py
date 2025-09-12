@@ -34,7 +34,7 @@ class NewNoteView(CreateView):
         return super().form_valid(form)
 
 
-class NoteDetailView(DetailView):
+class NoteDetailView(LoginRequiredMixin, DetailView):
     """
     View for a single note.
     """

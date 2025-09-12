@@ -11,9 +11,10 @@ from src.apps.notes.models import Note
 User = get_user_model()
 
 
-class NoteListViewTestCase(TestCase):
+class NoteTestCase(TestCase):
     """
-    Integration tests for note-related views.
+    Extended class for note-related tests. Includes creation of two
+    users, each with their own set up notes.
     """
     def setUp(self):
         # Create a test user
@@ -49,7 +50,12 @@ class NoteListViewTestCase(TestCase):
         # Note-related URLs
         self.note_list_url = reverse("notes:list")
 
-    def test_unauthenticated_user_redirected(self):
+
+class NoteListViewTests(NoteTestCase):
+    """
+    Integration tests for NoteListView.
+    """
+    def test_note_list_redirects_unauthenticated_users(self):
         """
         Test that unauthenticated users are redirected to the front
         page.
@@ -57,7 +63,7 @@ class NoteListViewTestCase(TestCase):
         response = self.client.get(self.note_list_url)
         self.assertRedirects(response, "/?next=/notes/")
 
-    def test_list_requires_login(self):
+    def test_note_list_requires_login(self):
         """
         Test that the note list can only be accessed by authenticated
         users.
@@ -66,7 +72,7 @@ class NoteListViewTestCase(TestCase):
         response = self.client.get(self.note_list_url)
         self.assertEqual(response.status_code, 200)
 
-    def test_list_shows_only_user_notes(self):
+    def test_note_list_shows_only_user_notes(self):
         """
         Test that the note list only shows notes authored by the
         logged-in user.
@@ -83,3 +89,16 @@ class NoteListViewTestCase(TestCase):
         self.assertNotIn("Strange note #1", response.text)
         self.assertNotIn("Strange note #2", response.text)
         self.assertNotIn("Strange note #3", response.text)
+
+
+class NoteDetailViewTests(NoteTestCase):
+    """
+    Integration tests for NoteDetailView.
+    """
+    def test_note_detail_redirects_unauthenticated_users(self):
+        """
+        Test that note detail redirects unauthenticated users
+        """
+        note = Note.objects.filter(title="Test note #1").first()
+        response = self.client.get(reverse("notes:detail", args=[note.id]))
+        self.assertRedirects(response, f"/?next=/notes/{note.id}/")
