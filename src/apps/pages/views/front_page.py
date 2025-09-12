@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django_ratelimit.decorators import ratelimit
@@ -117,12 +118,14 @@ class FrontPageView(TemplateView):
             delete_passcode_session_data(request)
             self._welcome_new_user(request, user_is_new)
 
+            next_url = request.GET.get("next", reverse("notes:list"))
+
             if request.headers.get("HX-Request"):
                 response = HttpResponse()
-                response["HX-Redirect"] = "/notes/"
+                response["HX-Redirect"] = next_url
                 return response
 
-            return redirect("notes:list")
+            return redirect(next_url)
 
         except Ratelimited:
             messages.error(request, ErrorMessages.TOO_MANY_PASSCODE_ATTEMPTS)
