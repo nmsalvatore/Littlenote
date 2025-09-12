@@ -78,3 +78,37 @@ class UserInteractions:
         """
         signup_button = self.browser.find_element(By.ID, "signup_button")
         signup_button.click()
+
+    def open_note_detail(self, title):
+        """
+        User clicks note link in note list and opens note detail.
+        """
+        note_link = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, f"//*[contains(text(), '{title}')]")
+            )
+        )
+        note_link.click()
+
+    def open_note_delete_dialog(self):
+        """
+        User clicks the "Delete note" button to open the confirmation
+        dialog.
+        """
+        delete_button = self.wait.until(
+            EC.element_to_be_clickable(
+                (By.ID, "delete_note_button")
+            )
+        )
+        delete_button.click()
+
+    def confirm_note_delete(self):
+        """
+        User clicks the button to confirm note deletion.
+        """
+        delete_button = self.wait.until(
+            EC.element_to_be_clickable(
+                (By.ID, "delete_note_confirm_button")
+            )
+        )
+        delete_button.click()

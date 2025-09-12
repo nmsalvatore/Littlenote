@@ -47,15 +47,14 @@ class NoteTestCase(TestCase):
                 author=self.strange_user
             )
 
-
-class NoteListViewTests(NoteTestCase):
-    """
-    Integration tests for NoteListView.
-    """
-    def setUp(self):
-        super().setUp()
+        # Note-related URLs
         self.note_list_url = reverse("notes:list")
 
+
+class NoteListTests(NoteTestCase):
+    """
+    Integration tests for note list page.
+    """
     def test_note_list_redirects_unauthenticated_users(self):
         """
         Test that unauthenticated users are redirected to the front
@@ -96,9 +95,9 @@ class NoteListViewTests(NoteTestCase):
         self.assertNotIn("Strange note #3", response.text)
 
 
-class NewNoteViewTests(TestCase):
+class NewNoteTests(TestCase):
     """
-    Integration tests for NewNoteView.
+    Integration tests for new note page.
     """
     def test_new_note_requires_auth(self):
         """
@@ -108,9 +107,9 @@ class NewNoteViewTests(TestCase):
         self.assertRedirects(response, "/?next=/notes/new/")
 
 
-class NoteDetailViewTests(NoteTestCase):
+class NoteDetailTests(NoteTestCase):
     """
-    Integration tests for NoteDetailView.
+    Integration tests for note detail page.
     """
     def setUp(self):
         super().setUp()
@@ -144,3 +143,26 @@ class NoteDetailViewTests(NoteTestCase):
         self.assertNotEqual(user, self.test_note.author)
         response = self.client.get(self.test_note_detail_url)
         self.assertEqual(response.status_code, 404)
+
+
+class NoteDeleteTests(NoteTestCase):
+    """
+    Integration tests for note deletion.
+    """
+    def setUp(self):
+        super().setUp()
+        self.test_note = Note.objects.get(title="Test note #1")
+        self.test_note_delete_url = reverse(
+            "notes:delete",
+            args=[self.test_note.id]
+        )
+
+    def test_note_deleted_with_post_request(self):
+        """
+        Test that a note is successfully deleted with a POST request
+        to the notes:delete URL.
+        """
+        self.client.force_login(self.test_user)
+        self.client.post(self.test_note_delete_url)
+        response = self.client.get(self.note_list_url)
+        self.assertNotIn(self.test_note.title, response.text)

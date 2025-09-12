@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic.edit import DeleteView
 
 from .models import Note
 
@@ -21,7 +22,7 @@ class NotesListView(LoginRequiredMixin, ListView):
         return Note.objects.filter(author=user)
 
 
-class NewNoteView(LoginRequiredMixin, CreateView):
+class NoteCreateView(LoginRequiredMixin, CreateView):
     """
     View for the new note page.
     """
@@ -33,6 +34,15 @@ class NewNoteView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class NoteDeleteView(DeleteView):
+    """
+    View for note deletion.
+    """
+    model = Note
+    success_url = reverse_lazy("notes:list")
+    template_name = "notes/delete.html"
 
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
