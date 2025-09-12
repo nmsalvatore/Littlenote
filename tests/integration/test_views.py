@@ -1,7 +1,7 @@
 """Integration tests for views."""
 
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user, get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
@@ -47,14 +47,15 @@ class NoteTestCase(TestCase):
                 author=self.strange_user
             )
 
-        # Note-related URLs
-        self.note_list_url = reverse("notes:list")
-
 
 class NoteListViewTests(NoteTestCase):
     """
     Integration tests for NoteListView.
     """
+    def setUp(self):
+        super().setUp()
+        self.note_list_url = reverse("notes:list")
+
     def test_note_list_redirects_unauthenticated_users(self):
         """
         Test that unauthenticated users are redirected to the front
@@ -95,10 +96,35 @@ class NoteDetailViewTests(NoteTestCase):
     """
     Integration tests for NoteDetailView.
     """
+    def setUp(self):
+        super().setUp()
+        self.test_note = Note.objects.get(title="Test note #1")
+        self.test_note_detail_url = reverse("notes:detail", args=[self.test_note.id])
+
     def test_note_detail_redirects_unauthenticated_users(self):
         """
         Test that note detail redirects unauthenticated users
         """
-        note = Note.objects.filter(title="Test note #1").first()
-        response = self.client.get(reverse("notes:detail", args=[note.id]))
-        self.assertRedirects(response, f"/?next=/notes/{note.id}/")
+        response = self.client.get(self.test_note_detail_url)
+        self.assertRedirects(response, f"/?next=/notes/{self.test_note.id}/")
+
+    def test_note_detail_viewable_by_author(self):
+        """
+        Test that note detail is viewable by the note author.
+        """
+        self.client.force_login(self.test_user)
+        user = get_user(self.client)
+        self.assertEqual(user, self.test_note.author)
+        response = self.client.get(self.test_note_detail_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_note_detail_not_viewable_by_stranger(self):
+        """
+        Test that note detail is NOT viewable by a stranger
+        (non-author). User should see a 404 page.
+        """
+        self.client.force_login(self.strange_user)
+        user = get_user(self.client)
+        self.assertNotEqual(user, self.test_note.author)
+        response = self.client.get(self.test_note_detail_url)
+        self.assertEqual(response.status_code, 404)

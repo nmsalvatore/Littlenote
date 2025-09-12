@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
 
@@ -40,3 +41,11 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
     """
     model = Note
     template_name = "notes/detail.html"
+
+    def get_object(self, queryset=None):
+        note = super().get_object(queryset)
+
+        if get_user(self.request) != note.author:
+            raise Http404
+
+        return super().get_object(queryset)
