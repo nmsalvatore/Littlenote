@@ -1,10 +1,12 @@
+from django.contrib.auth import get_user
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
 
 from .models import Note
 
 
-class NotesListView(ListView):
+class NotesListView(LoginRequiredMixin, ListView):
     """
     View for the notes list page.
     """
@@ -12,6 +14,10 @@ class NotesListView(ListView):
     context_object_name = "notes"
     template_name = "notes/list.html"
     paginate_by = 10
+
+    def get_queryset(self):
+        user = get_user(self.request)
+        return Note.objects.filter(author=user)
 
 
 class NewNoteView(CreateView):
