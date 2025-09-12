@@ -73,20 +73,24 @@ class NoteListViewTests(NoteTestCase):
         response = self.client.get(self.note_list_url)
         self.assertEqual(response.status_code, 200)
 
-    def test_note_list_shows_only_user_notes(self):
+    def test_note_list_shows_user_notes(self):
         """
-        Test that the note list only shows notes authored by the
+        Test that the note list shows notes authored by the
         logged-in user.
         """
         self.client.force_login(self.test_user)
         response = self.client.get(self.note_list_url)
-
-        # Test user notes should be in list
         self.assertIn("Test note #1", response.text)
         self.assertIn("Test note #2", response.text)
         self.assertIn("Test note #3", response.text)
 
-        # Stranger notes should NOT be in list
+    def test_note_list_does_not_show_strange_notes(self):
+        """
+        Test that the note list does NOT show notes authored by
+        strangers.
+        """
+        self.client.force_login(self.test_user)
+        response = self.client.get(self.note_list_url)
         self.assertNotIn("Strange note #1", response.text)
         self.assertNotIn("Strange note #2", response.text)
         self.assertNotIn("Strange note #3", response.text)
