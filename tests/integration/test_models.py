@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from src.apps.notes.models import Note
 
+
 User = get_user_model()
 
 
