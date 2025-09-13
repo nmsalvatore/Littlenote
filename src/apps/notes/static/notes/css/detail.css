@@ -14,6 +14,7 @@
 
 .note-detail header h1 {
     margin-bottom: var(--spacing-xs);
+    font-size: 2rem;
 }
 
 .note-content h1,
@@ -26,6 +27,14 @@
     margin-bottom: var(--spacing-sm);
 }
 
+.note-content h1 {
+    font-size: 1.25rem;
+}
+
+.note-content h2 {
+    font-size: 1.125rem;
+}
+
 .note-content h1:first-child,
 .note-content h2:first-child,
 .note-content h3:first-child,
@@ -33,36 +42,6 @@
 .note-content h5:first-child,
 .note-content h6:first-child {
     margin-top: 0;
-}
-
-.note-content h1::before {
-    content: "#";
-    margin-right: 1ch;
-}
-
-.note-content h2::before {
-    content: "##";
-    margin-right: 1ch;
-}
-
-.note-content h3::before {
-    content: "###";
-    margin-right: 1ch;
-}
-
-.note-content h4::before {
-    content: "####";
-    margin-right: 1ch;
-}
-
-.note-content h5::before {
-    content: "#####";
-    margin-right: 1ch;
-}
-
-.note-content h6::before {
-    content: "#######";
-    margin-right: 1ch;
 }
 
 .note-content ol,
@@ -81,8 +60,89 @@
     margin: auto;
     position: relative;
     top: calc(-1 * var(--spacing-xl));
+    border: 1px solid var(--color-action);
+    box-shadow: 0 2px 8px -6px;
+    border-radius: 6px;
 }
 
 #delete_note_dialog .dialog-content {
     padding: var(--spacing-md);
+    background: var(--color-bg);
+    max-width: 480px;
+}
+
+#delete_note_dialog .dialog-content p:last-of-type {
+    margin-bottom: var(--spacing-md);
+}
+
+#delete_note_dialog form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+#delete_note_dialog form button {
+    background: var(--color-lighter);
+    border: 2px solid var(--color-light);
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 2px solid var(--color-light);
+}
+
+#delete_note_dialog form #delete_note_confirm_button {
+    background: hsl(0 15% 48%);
+    color: var(--color-whitish);
+}
+
+.note-settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.more-options summary {
+    cursor: pointer;
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0 var(--spacing-xs);
+    position: relative;
+    left: 14px;
+}
+
+.more-options menu {
+    list-style-type: none;
+    position: absolute;
+    background: var(--color-bg);
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-light);
+    border-radius: 6px;
+    width: max-content;
+    right: 0;
+    box-shadow: 0 2px 8px -6px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.more-options menu li {
+    border-bottom: 1px solid var(--color-lighter);
+    padding-bottom: var(--spacing-xs);
+}
+
+.more-options menu li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.more-options menu a {
+    display: block;
+    text-decoration: none;
+}
+
+.more-options menu #delete_note_button {
+    background: none;
+    border: none;
+    color: hsl(0 15% 48% / 1);
 }

@@ -18,24 +18,32 @@
             {% if note.title %}
                 <h1 class="note-title">{{ note.title }}</h1>
             {% endif %}
-            <time datetime="">{{ note.created_at }}</time>
+            <div class="note-settings">
+                <time datetime="">{{ note.created_at }}</time>
+                <details class="more-options">
+                    <summary class="more-options-icon">&vellip;</summary>
+                    <menu>
+                        <li><a href="{% url 'notes:edit' note.id %}">Edit note</a></li>
+                        <li><button id="delete_note_button">Delete note</button></li>
+                    </menu>
+                </details>
+            </div>
         </header>
+        <hr>
         <div class="note-content">{{ note.content | markdown | safe }}</div>
     </section>
-    <hr>
-    <section class="note-detail-options">
-        <button id="delete_note_button">Delete note</button>
-        <dialog id="delete_note_dialog" autofocus>
-            <div class="dialog-content">
-                <p>Are you sure that you want to delete this note?</p>
-                <form action="{% url 'notes:delete' note.id %}" method="post">
-                    {% csrf_token %}
-                    <button formmethod="dialog">Cancel</button>
-                    <button type="submit" id="delete_note_confirm_button">Yes, delete this note</button>
-                </form>
-            </div>
-        </dialog>
-    </section>
+
+    <!-- modals -->
+    <dialog id="delete_note_dialog" autofocus>
+        <div class="dialog-content">
+            <p>Are you sure that you want to delete this note? This action cannot be undone.</p>
+            <form action="{% url 'notes:delete' note.id %}" method="post">
+                {% csrf_token %}
+                <button formmethod="dialog">Cancel</button>
+                <button type="submit" id="delete_note_confirm_button">Delete</button>
+            </form>
+        </div>
+    </dialog>
 {% endblock %}
 
 {% block scripts %}
