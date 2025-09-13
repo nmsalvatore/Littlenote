@@ -6,7 +6,8 @@ ul.note-list {
 }
 
 ul.note-list > li {
-    display: flex;
+    display: grid;
+    grid-template-columns: 10ch 1fr;
     gap: var(--spacing-md);
 }
 
