@@ -118,14 +118,12 @@ class FrontPageView(TemplateView):
             delete_passcode_session_data(request)
             self._welcome_new_user(request, user_is_new)
 
-            next_url = request.GET.get("next", reverse("notes:list"))
-
             if request.headers.get("HX-Request"):
                 response = HttpResponse()
-                response["HX-Redirect"] = next_url
+                response["HX-Redirect"] = reverse("notes:list")
                 return response
 
-            return redirect(next_url)
+            return redirect(reverse("notes:list"))
 
         except Ratelimited:
             messages.error(request, ErrorMessages.TOO_MANY_PASSCODE_ATTEMPTS)

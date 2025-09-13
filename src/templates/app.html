@@ -11,7 +11,7 @@
 {% block content %}
     <nav id="admin_nav">
         <div class="container">
-            <span>@{{ user }}</span>
+            <span>{% if user.username == user.email %}{{ user.email }}{% else %}@{{ user }}{% endif %}</span>
             <form action="{% url 'accounts:logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit">Sign out</button>

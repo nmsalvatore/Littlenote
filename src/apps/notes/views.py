@@ -16,6 +16,7 @@ class NotesListView(LoginRequiredMixin, ListView):
     context_object_name = "notes"
     template_name = "notes/list.html"
     paginate_by = 10
+    redirect_field_name = None
 
     def get_queryset(self):
         user = get_user(self.request)
@@ -30,19 +31,29 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     fields = ["title", "content"]
     template_name = "notes/new.html"
     success_url = reverse_lazy("notes:list")
+    redirect_field_name = None
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class NoteDeleteView(DeleteView):
+class NoteDeleteView(LoginRequiredMixin, DeleteView):
     """
     View for note deletion.
     """
     model = Note
     success_url = reverse_lazy("notes:list")
     template_name = "notes/delete.html"
+    redirect_field_name = None
+
+    def get_object(self, queryset=None):
+        note = super().get_object(queryset)
+
+        if get_user(self.request) != note.author:
+            raise Http404
+
+        return note
 
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
@@ -51,6 +62,7 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
     """
     model = Note
     template_name = "notes/detail.html"
+    redirect_field_name = None
 
     def get_object(self, queryset=None):
         note = super().get_object(queryset)
@@ -58,10 +70,10 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
         if get_user(self.request) != note.author:
             raise Http404
 
-        return super().get_object(queryset)
+        return note
 
 
-class NoteEditView(UpdateView):
+class NoteEditView(LoginRequiredMixin, UpdateView):
     """
     View for note edit page.
     """
@@ -69,4 +81,13 @@ class NoteEditView(UpdateView):
     fields = ["title", "content"]
     template_name = "notes/edit.html"
     context_object_name = "note"
+    redirect_field_name = None
     success_url = reverse_lazy("notes:list")
+
+    def get_object(self, queryset=None):
+        note = super().get_object(queryset)
+
+        if get_user(self.request) != note.author:
+            raise Http404
+
+        return note

@@ -51,13 +51,3 @@ class AuthFlowTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
         self.interactions.signup_and_login_new_user(self.user_email)
         self.wait.until(EC.url_contains("/notes/"))
-
-    def test_login_redirects_to_next_page(self):
-        """
-        Test that login redirects to the URL specified in the "next"
-        argument, if it exists.
-        """
-        self.browser.get(self.live_server_url + "?next=/notes/new/")
-        self.interactions.signup_and_login_new_user(self.user_email)
-        self.wait.until(EC.url_contains("/notes/new"))
-        self.wait.until(EC.presence_of_element_located((By.ID, "note_form")))

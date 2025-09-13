@@ -61,7 +61,7 @@ class NoteListTests(NoteTestCase):
         page.
         """
         response = self.client.get(self.note_list_url)
-        self.assertRedirects(response, "/?next=/notes/")
+        self.assertRedirects(response, "/")
 
     def test_note_list_requires_login(self):
         """
@@ -109,7 +109,7 @@ class NewNoteTests(NoteTestCase):
         front page.
         """
         response = self.client.get(self.new_note_url)
-        self.assertRedirects(response, "/?next=/notes/new/")
+        self.assertRedirects(response, "/")
 
     def test_new_note_accessible_to_logged_in_users(self):
         """
@@ -146,7 +146,7 @@ class NoteDetailTests(NoteTestCase):
         Test that note detail redirects unauthenticated users
         """
         response = self.client.get(self.test_note_detail_url)
-        self.assertRedirects(response, f"/?next=/notes/{self.test_note.id}/")
+        self.assertRedirects(response, "/")
 
     def test_note_detail_viewable_by_author(self):
         """
@@ -182,6 +182,24 @@ class NoteDeleteTests(NoteTestCase):
             args=[self.test_note.id]
         )
 
+    def test_note_cannot_be_deleted_by_unauthenticated_user(self):
+        """
+        Test that a note CANNOT be deleted by an unauthenticated user.
+        """
+        self.client.post(self.test_note_delete_url)
+        note = Note.objects.filter(id=self.test_note.id)
+        self.assertTrue(note.exists())
+
+    def test_note_cannot_be_deleted_by_stranger(self):
+        """
+        Test that a note CANNOT be deleted by a user who is not the
+        author of the note.
+        """
+        self.client.force_login(self.strange_user)
+        self.client.post(self.test_note_delete_url)
+        note = Note.objects.filter(id=self.test_note.id)
+        self.assertTrue(note.exists())
+
     def test_note_deleted_with_post_request(self):
         """
         Test that a note is successfully deleted with a POST request
@@ -212,6 +230,21 @@ class NoteEditTests(NoteTestCase):
         self.client.force_login(self.test_user)
         response = self.client.get(self.note_edit_url)
         self.assertEqual(response.status_code, 200)
+
+    def test_note_edit_redirects_unauthenticated_users(self):
+        """
+        Test that unauthenticated users are redirected from edit page.
+        """
+        response = self.client.get(self.note_edit_url)
+        self.assertRedirects(response, "/")
+
+    def test_note_edit_not_viewable_by_stranger(self):
+        """
+        Test that the note edit page CANNOT be viewed by strangers.
+        """
+        self.client.force_login(self.strange_user)
+        response = self.client.get(self.note_edit_url)
+        self.assertEqual(response.status_code, 404)
 
     def test_note_edit_submission_redirects_to_list(self):
         """
