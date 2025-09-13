@@ -95,16 +95,41 @@ class NoteListTests(NoteTestCase):
         self.assertNotIn("Strange note #3", response.text)
 
 
-class NewNoteTests(TestCase):
+class NewNoteTests(NoteTestCase):
     """
     Integration tests for new note page.
     """
-    def test_new_note_requires_auth(self):
+    def setUp(self):
+        super().setUp()
+        self.new_note_url = reverse("notes:new")
+
+    def test_new_note_redirects_unauthenticated_users(self):
         """
-        Test that new note page only accessible to authenticated users.
+        Test that new note route redirects unauthenticated users to the
+        front page.
         """
-        response = self.client.get(reverse("notes:new"))
+        response = self.client.get(self.new_note_url)
         self.assertRedirects(response, "/?next=/notes/new/")
+
+    def test_new_note_accessible_to_logged_in_users(self):
+        """
+        Test that new note page is accessible to logged-in users.
+        """
+        self.client.force_login(self.test_user)
+        response = self.client.get(self.new_note_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_new_note_submission_redirects_to_list(self):
+        """
+        Test that submission of a new note redirects the user to the
+        note list page.
+        """
+        self.client.force_login(self.test_user)
+        response = self.client.post(self.new_note_url, {
+            "title": "Hello, Littlenote!",
+            "content": "It's a beautiful day!"
+        })
+        self.assertRedirects(response, "/notes/")
 
 
 class NoteDetailTests(NoteTestCase):
@@ -166,3 +191,63 @@ class NoteDeleteTests(NoteTestCase):
         self.client.post(self.test_note_delete_url)
         response = self.client.get(self.note_list_url)
         self.assertNotIn(self.test_note.title, response.text)
+
+
+class NoteEditTests(NoteTestCase):
+    """
+    Integration tests for note edit page.
+    """
+    def setUp(self):
+        super().setUp()
+        self.test_note = Note.objects.get(title="Test note #1")
+        self.note_edit_url = reverse(
+            "notes:edit",
+            args=[self.test_note.id]
+        )
+
+    def test_note_edit_viewable_by_author(self):
+        """
+        Test that the note edit page can be viewed by the note author.
+        """
+        self.client.force_login(self.test_user)
+        response = self.client.get(self.note_edit_url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_note_edit_submission_redirects_to_list(self):
+        """
+        Test that submission of updated note redirects the user to the
+        note list.
+        """
+        self.client.force_login(self.test_user)
+        response = self.client.post(self.note_edit_url, {
+            "title": "Hello Littlenote!",
+            "content": "It's a beautiful day!"
+        })
+        self.assertRedirects(response, "/notes/")
+
+    def test_note_edit_updates_note(self):
+        """
+        Test that submission of updated note actually updates the note.
+        """
+        self.client.force_login(self.test_user)
+
+        # Verify original note content
+        response = self.client.get(reverse("notes:detail", args=[self.test_note.id]))
+        self.assertIn("Test note #1", response.text)
+        self.assertIn("Hello, test user!", response.text)
+
+        # Update the note
+        response = self.client.post(self.note_edit_url, {
+            "title": "Hello Littlenote!",
+            "content": "It's a beautiful day!"
+        })
+
+        # Verify new note content
+        response = self.client.get(reverse("notes:detail", args=[self.test_note.id]))
+        self.assertIn("Hello Littlenote!", response.text)
+        self.assertIn("It's a beautiful day!", response.text)
+
+        # Verify original note content is no longer present
+        response = self.client.get(reverse("notes:detail", args=[self.test_note.id]))
+        self.assertNotIn("Test note #1", response.text)
+        self.assertNotIn("Hello, test user!", response.text)

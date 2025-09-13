@@ -2,7 +2,7 @@ from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.views.generic.edit import DeleteView
 
 from .models import Note
@@ -59,3 +59,14 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
             raise Http404
 
         return super().get_object(queryset)
+
+
+class NoteEditView(UpdateView):
+    """
+    View for note edit page.
+    """
+    model = Note
+    fields = ["title", "content"]
+    template_name = "notes/edit.html"
+    context_object_name = "note"
+    success_url = reverse_lazy("notes:list")

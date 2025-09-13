@@ -1,0 +1,25 @@
+{% extends "app.html" %}
+{% load static %}
+
+{% block subtitle %}
+    new note
+{% endblock subtitle %}
+
+{% block app_stylesheets %}
+    <link rel="stylesheet" href="{% static 'notes/css/new.css' %}">
+{% endblock %}
+
+{% block nav_button %}
+    <a href="{{ previous_url }}" class="back-btn">
+        ../
+    </a>
+{% endblock %}
+
+{% block app_content %}
+    <form method="post" id="note_form">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Title (optional)" value="{{ note.title }}">
+        <textarea name="content" placeholder="Write a note...">{{ note.content }}</textarea>
+        <button type="submit">Update</button>
+    </form>
+{% endblock %}
