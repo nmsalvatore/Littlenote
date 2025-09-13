@@ -60,8 +60,8 @@
     margin: auto;
     position: relative;
     top: calc(-1 * var(--spacing-xl));
-    border: 1px solid var(--color-action);
-    box-shadow: 0 2px 8px -6px;
+    border: none;
+    box-shadow: 0 1px 8px -2px;
     border-radius: 6px;
 }
 
@@ -107,23 +107,20 @@
     font-size: 1.5rem;
     line-height: 1;
     padding: 0 var(--spacing-xs);
-    position: relative;
-    left: 14px;
 }
 
 .more-options menu {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
     list-style-type: none;
     position: absolute;
     background: var(--color-bg);
     padding: var(--spacing-sm);
-    border: 1px solid var(--color-light);
     border-radius: 6px;
     width: max-content;
-    right: 0;
-    box-shadow: 0 2px 8px -6px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
+    right: 1rem;
+    box-shadow: 0 1px 8px -2px;
 }
 
 .more-options menu li {
