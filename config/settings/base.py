@@ -47,8 +47,9 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "src.apps.accounts",
-    "src.apps.pages",
+    "src.apps.common",
     "src.apps.notes",
+    "src.apps.pages",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -60,6 +61,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 DJANGO_MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "src.apps.common.middleware.BackButtonMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -86,6 +88,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "config.context_processors.site_settings",
+                "config.context_processors.back_button_context"
             ],
         },
     },

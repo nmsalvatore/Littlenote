@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block nav_button %}
-    <a href="{% url 'notes:list' %}">
+    <a href="{{ previous_url }}" class="back-btn">
         ../
     </a>
 {% endblock %}

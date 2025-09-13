@@ -58,14 +58,14 @@ form:has(#note_search_input) {
     margin-top: var(--spacing-sm);
 }
 
-.pagination:has(.previous-button) {
+.pagination:has(.prev-page-btn) {
     justify-content: flex-start;
 }
 
-.pagination:has(.next-button) {
+.pagination:has(.next-page-btn) {
     justify-content: flex-end;
 }
 
-.pagination:has(.next-button):has(.previous-button) {
+.pagination:has(.next-page-btn):has(.prev-page-btn) {
     justify-content: space-between;
 }

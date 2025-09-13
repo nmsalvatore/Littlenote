@@ -112,3 +112,21 @@ class UserInteractions:
             )
         )
         delete_button.click()
+
+    def click_back_button(self):
+        """
+        User click of the back button.
+        """
+        back_button = self.wait.until(
+            EC.element_to_be_clickable((By.CLASS_NAME, "back-btn"))
+        )
+        back_button.click()
+
+    def click_next_page_button(self):
+        """
+        User click of the next page button.
+        """
+        next_page_button = self.wait.until(
+            EC.element_to_be_clickable((By.CLASS_NAME, "next-page-btn"))
+        )
+        next_page_button.click()
