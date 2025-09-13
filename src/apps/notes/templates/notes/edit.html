@@ -6,7 +6,7 @@
 {% endblock subtitle %}
 
 {% block app_stylesheets %}
-    <link rel="stylesheet" href="{% static 'notes/css/new.css' %}">
+    <link rel="stylesheet" href="{% static 'notes/css/edit.css' %}">
 {% endblock %}
 
 {% block nav_button %}
@@ -18,7 +18,7 @@
 {% block app_content %}
     <form method="post" id="note_form">
         {% csrf_token %}
-        <input type="text" name="title" placeholder="Title (optional)" value="{{ note.title }}">
+        <textarea name="title" placeholder="Title (optional)">{{ note.title }}</textarea>
         <textarea name="content" placeholder="Write a note...">{{ note.content }}</textarea>
         <button type="submit">Update</button>
     </form>

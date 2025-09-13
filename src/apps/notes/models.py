@@ -17,7 +17,7 @@ class Note(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     timestamp_id = models.CharField(max_length=14, default=generate_timestamp)
-    title = models.CharField(max_length=255, blank=True)
+    title = models.TextField(blank=True)
     content = models.TextField()
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,

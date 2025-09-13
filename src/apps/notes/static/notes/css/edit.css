@@ -22,14 +22,17 @@
     outline: none;
 }
 
-#note_form input[name="title"] {
+#note_form textarea {
+    resize: none;
+    field-sizing: content;
+}
+
+#note_form textarea[name="title"] {
     font-weight: 600;
 }
 
-#note_form textarea {
+#note_form textarea[name="content"] {
     flex: 1;
-    resize: none;
-    field-sizing: content;
     padding-bottom: var(--spacing-lg);
 }
 
