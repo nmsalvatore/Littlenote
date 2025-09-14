@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block nav_button %}
-    <a href="{{ previous_url }}" class="back-btn">
+    <a href="{% url 'notes:detail' note.id %}" class="back-btn">
         ../
     </a>
 {% endblock %}
