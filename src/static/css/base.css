@@ -41,12 +41,26 @@ body > footer {
     width: 100%;
 }
 
+@media only screen and (max-width: calc(540px + 2rem)) {
+    body > header,
+    body > main,
+    body > footer {
+        padding: 0 1rem;
+    }
+}
+
 body > header {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     padding-bottom: var(--spacing-lg);
     padding-top: var(--spacing-xl);
+}
+
+@media only screen and (max-width: calc(540px + 2rem)) {
+    body > header {
+        padding-top: var(--spacing-lg);
+    }
 }
 
 body > header > div {
@@ -63,7 +77,7 @@ body > main {
 
 body > footer {
     padding-bottom: var(--spacing-xl);
-    padding-top: var(--spacing-lg);
+    padding-top: var(--spacing-xl);
 }
 
 /* text-level styles */
