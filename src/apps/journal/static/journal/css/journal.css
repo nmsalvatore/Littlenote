@@ -2,3 +2,20 @@ form > button[type="submit"] {
     width: max-content;
     align-self: flex-end;
 }
+
+.journal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.journal-entry {
+    background: var(--color-lighter);
+    border-radius: 6px;
+    padding: var(--spacing-sm);
+}
+
+.journal-entry time {
+    margin-bottom: var(--spacing-sm);
+    display: block;
+}

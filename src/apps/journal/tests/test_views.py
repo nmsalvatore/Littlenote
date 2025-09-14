@@ -3,7 +3,7 @@
 
 from django.contrib.auth import get_user_model
 from django.test import LiveServerTestCase
-from django.urls import reverse
+from django.urls import reverse_lazy
 
 from src.apps.journal.models import JournalEntry
 
@@ -17,7 +17,8 @@ class JournalEntryListViewTests(LiveServerTestCase):
     """
 
     def setUp(self):
-        self.new_journal_entry_url = reverse("journal:new-entry")
+        self.new_journal_entry_url = reverse_lazy("journal:new-entry")
+        self.journal_url = reverse_lazy("journal:home")
         self.test_user_email = "testuser@example.com"
         self.test_user = User.objects.create_user(
             username=self.test_user_email,
@@ -40,8 +41,9 @@ class JournalEntryListViewTests(LiveServerTestCase):
         Test that journal entry is shown in the journal after it has
         been created.
         """
-        # login user
-        # go to journal page
-        # submit a journal entry
-        # check if journal entry is in journal
-        pass
+        self.client.force_login(self.test_user)
+        self.client.post(self.new_journal_entry_url, {
+            "content": "Stuff is weird",
+        })
+        response = self.client.get(self.journal_url)
+        self.assertIn("Stuff is weird", response.text)

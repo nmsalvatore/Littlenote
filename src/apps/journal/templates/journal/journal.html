@@ -6,9 +6,17 @@
 {% endblock %}
 
 {% block app_content %}
-    <form method="post" action="{% url 'journal:new-entry' %}">
-        {% csrf_token %}
-        <textarea name="content" id="journal_entry" placeholder="What's on your mind?"></textarea>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="journal">
+        <form method="post" action="{% url 'journal:new-entry' %}">
+            {% csrf_token %}
+            <textarea name="content" id="journal_entry" placeholder="What's on your mind?"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        {% for entry in journal_entries %}
+            <div class="journal-entry">
+                <time datetime="">{{ entry.created_at }}</time>
+                {{ entry.content|linebreaks }}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
