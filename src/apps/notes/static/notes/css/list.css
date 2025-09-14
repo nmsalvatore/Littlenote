@@ -56,7 +56,7 @@ form:has(#note_search_input) {
 
 .pagination {
     display: flex;
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-md);
 }
 
 .pagination:has(.prev-page-btn) {
