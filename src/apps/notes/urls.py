@@ -15,5 +15,5 @@ urlpatterns = [
     path("<uuid:pk>/", NoteDetailView.as_view(), name="detail"),
     path("new/", NoteCreateView.as_view(), name="new"),
     path("edit/<uuid:pk>/", NoteEditView.as_view(), name="edit"),
-    path("delete/<uuid:pk>/", NoteDeleteView.as_view(), name="delete"),
+    path("delete/<uuid:pk>/", NoteDeleteView.as_view(), name="delete")
 ]
