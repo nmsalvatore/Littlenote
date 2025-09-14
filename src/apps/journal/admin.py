@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from src.apps.journal.models import JournalEntry
+
+admin.site.register(JournalEntry)

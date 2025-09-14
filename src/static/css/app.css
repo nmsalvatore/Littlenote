@@ -91,3 +91,46 @@ pre {
 code:not(pre code) {
     padding: 2px 4px;
 }
+
+/* app-level input styles */
+
+form:has(textarea[name="content"]) {
+    background: var(--color-whitish);
+    border: 1px solid var(--color-light);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+}
+
+form:has(textarea[name="content"]) > input,
+form:has(textarea[name="content"]) > textarea,
+form:has(textarea[name="content"]) > button {
+    border: none;
+    background: none;
+}
+
+form:has(textarea[name="content"]) > input:focus,
+form:has(textarea[name="content"]) > textarea:focus,
+form:has(textarea[name="content"]) > button:focus {
+    outline: none;
+}
+
+form:has(textarea[name="content"]) > textarea {
+    resize: none;
+    field-sizing: content;
+}
+
+form:has(textarea[name="content"]) > textarea[name="content"] {
+    padding-bottom: var(--spacing-sm);
+}
+
+form:has(textarea[name="content"]) > button[type="submit"] {
+    color: white;
+    cursor: pointer;
+    background: var(--color-action);
+    border-radius: 6px;
+    border: 2px solid var(--color-light);
+    padding: 6px 16px;
+}

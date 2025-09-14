@@ -1,0 +1,14 @@
+{% extends 'app.html' %}
+{% load static %}
+
+{% block app_stylesheets %}
+    <link rel="stylesheet" href="{% static 'journal/css/journal.css' %}">
+{% endblock %}
+
+{% block app_content %}
+    <form method="post" action="{% url 'journal:new-entry' %}">
+        {% csrf_token %}
+        <textarea name="content" id="journal_entry" placeholder="What's on your mind?"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

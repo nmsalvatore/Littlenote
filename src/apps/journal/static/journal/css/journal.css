@@ -1,0 +1,4 @@
+form > button[type="submit"] {
+    width: max-content;
+    align-self: flex-end;
+}

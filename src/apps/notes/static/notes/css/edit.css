@@ -1,46 +1,11 @@
 #note_form {
-    display: flex;
     flex: 1;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    background: var(--color-whitish);
-    border: 1px solid var(--color-light);
-    border-radius: 4px;
-    padding: var(--spacing-sm);
 }
 
-#note_form > input,
-#note_form > textarea,
-#note_form > button {
-    border: none;
-    background: none;
-}
-
-#note_form > input:focus,
-#note_form > textarea:focus,
-#note_form > button:focus {
-    outline: none;
-}
-
-#note_form textarea {
-    resize: none;
-    field-sizing: content;
-}
-
-#note_form textarea[name="title"] {
+textarea[name="title"] {
     font-weight: 600;
 }
 
-#note_form textarea[name="content"] {
+textarea[name="content"] {
     flex: 1;
-    padding-bottom: var(--spacing-lg);
-}
-
-#note_form button[type="submit"] {
-    color: white;
-    cursor: pointer;
-    background: var(--color-action);
-    border-radius: 6px;
-    border: 2px solid var(--color-light);
-    padding: 6px 0;
 }
