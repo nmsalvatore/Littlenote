@@ -28,11 +28,7 @@
 }
 
 .note-content h1 {
-    font-size: 1.25rem;
-}
-
-.note-content h2 {
-    font-size: 1.125rem;
+    font-size: 1.1rem;
 }
 
 .note-content h1:first-child,
