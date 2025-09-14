@@ -15,7 +15,6 @@ class NotesListView(LoginRequiredMixin, ListView):
     """
     model = Note
     context_object_name = "notes"
-    paginate_by = 10
     redirect_field_name = None
 
     def get_template_names(self):

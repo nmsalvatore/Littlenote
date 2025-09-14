@@ -15,7 +15,7 @@
                 value="{{ request.GET.search }}"
                 hx-get="{% url 'notes:list' %}"
                 hx-swap="true"
-                hx-target="#note_list_container"
+                hx-target=".note-list"
                 hx-trigger="input changed delay:500ms"
                 hx-push-url="true"
                 placeholder="Search for notes...">

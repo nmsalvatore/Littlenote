@@ -1,31 +1,16 @@
-<div id="note_list_container">
-    <ul class="note-list">
-        {% for note in notes %}
-            <li>
-                {% with note.created_at|date:'Y-m-d' as formatted_date %}
-                    <time datetime="{{ formatted_date }}">{{ formatted_date }}</time>
-                    <a href="{% url 'notes:detail' pk=note.id %}">
-                        {% if note.title %}
-                            {{ note.title }}
-                        {% else %}
-                            {{ note.content|truncatewords:5 }}
-                        {% endif %}
-                    </a>
-                {% endwith %}
-            </li>
-        {% endfor %}
-    </ul>
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a
-                href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-                class="prev-page-btn">&larr; previous</a>
-        {% endif %}
-
-        {% if page_obj.has_next %}
-            <a
-                href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
-                class="next-page-btn">next &rarr;</a>
-        {% endif %}
-    </div>
-</div>
+<ul class="note-list">
+    {% for note in notes %}
+        <li>
+            {% with note.created_at|date:'Y-m-d' as formatted_date %}
+                <time datetime="{{ formatted_date }}">{{ formatted_date }}</time>
+                <a href="{% url 'notes:detail' pk=note.id %}">
+                    {% if note.title %}
+                        {{ note.title }}
+                    {% else %}
+                        {{ note.content|truncatewords:5 }}
+                    {% endif %}
+                </a>
+            {% endwith %}
+        </li>
+    {% endfor %}
+</ul>
