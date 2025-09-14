@@ -1,4 +1,4 @@
-"""Integration tests for models."""
+"""Integration tests for notes models."""
 
 import uuid
 from django.contrib.auth import get_user_model
