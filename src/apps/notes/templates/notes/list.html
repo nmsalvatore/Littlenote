@@ -23,7 +23,11 @@
         <a href="{% url 'notes:new' %}">New Note</a>
     </div>
     <hr>
-    {% include 'notes/partials/list_entries.html' %}
+    {% if notes %}
+        {% include 'notes/partials/list_entries.html' %}
+    {% else %}
+        <p>You don't have any notes yet!</p>
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}
