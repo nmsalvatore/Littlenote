@@ -21,7 +21,18 @@ main {
     width: 100%;
 }
 
+#continue_with_email_form input[type="email"]:disabled {
+    color: var(--color-dull);
+}
+
 #continue_with_email_form button {
     background: var(--color-primary);
     color: var(--color-whitish);
+}
+
+#continue_with_email_form small {
+    display: inline-block;
+    margin-bottom: var(--spacing-xs);
+    position: relative;
+    left: 2px;
 }
