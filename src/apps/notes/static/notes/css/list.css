@@ -53,20 +53,3 @@ form:has(#note_search_input) {
 #note_search_input:focus {
     outline: none;
 }
-
-.pagination {
-    display: flex;
-    margin-top: var(--spacing-md);
-}
-
-.pagination:has(.prev-page-btn) {
-    justify-content: flex-start;
-}
-
-.pagination:has(.next-page-btn) {
-    justify-content: flex-end;
-}
-
-.pagination:has(.next-page-btn):has(.prev-page-btn) {
-    justify-content: space-between;
-}
