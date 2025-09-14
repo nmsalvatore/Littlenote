@@ -3,7 +3,6 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
-
     {% block app_stylesheets %}
     {% endblock %}
 {% endblock %}
@@ -21,17 +20,14 @@
     <header>
         <div>
             <h1>{{ SITE_TITLE }}</h1>
-
             {% block nav_button %}
             {% endblock %}
         </div>
-
         {% include "partials/navbar.html" %}
     </header>
     <main>
         {% block app_content %}
         {% endblock %}
     </main>
-
     {% include "partials/footer.html" %}
 {% endblock %}

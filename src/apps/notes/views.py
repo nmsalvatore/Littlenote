@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
@@ -14,13 +15,26 @@ class NotesListView(LoginRequiredMixin, ListView):
     """
     model = Note
     context_object_name = "notes"
-    template_name = "notes/list.html"
     paginate_by = 10
     redirect_field_name = None
 
+    def get_template_names(self):
+        if self.request.headers.get("HX-Request"):
+            return ["notes/partials/list_entries.html"]
+        return ["notes/list.html"]
+
     def get_queryset(self):
         user = get_user(self.request)
-        return Note.objects.filter(author=user)
+        query = self.request.GET.get("search", "").strip()
+        queryset = Note.objects.filter(author=user)
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query)
+            )
+
+        return queryset
 
 
 class NoteCreateView(LoginRequiredMixin, CreateView):

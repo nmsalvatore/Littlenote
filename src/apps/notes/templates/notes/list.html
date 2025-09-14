@@ -7,35 +7,25 @@
 
 {% block app_content %}
     <div class="actions">
-        <form action="">
-            <input type="search" placeholder="Search for notes..." id="note_search_input">
+        <form method="get" action="{% url 'notes:list' %}">
+            <input
+                type="search"
+                name="search"
+                id="note_search_input"
+                value="{{ request.GET.search }}"
+                hx-get="{% url 'notes:list' %}"
+                hx-swap="true"
+                hx-target="#note_list_container"
+                hx-trigger="input changed delay:500ms"
+                hx-push-url="true"
+                placeholder="Search for notes...">
         </form>
         <a href="{% url 'notes:new' %}">New Note</a>
     </div>
     <hr>
-    <ul class="note-list">
-        {% for note in notes %}
-            <li>
-                {% with note.created_at|date:'Y-m-d' as formatted_date %}
-                    <time datetime="{{ formatted_date }}">{{ formatted_date }}</time>
-                    <a href="{% url 'notes:detail' pk=note.id %}">
-                        {% if note.title %}
-                            {{ note.title }}
-                        {% else %}
-                            {{ note.content|truncatewords:5 }}
-                        {% endif %}
-                    </a>
-                {% endwith %}
-            </li>
-        {% endfor %}
-    </ul>
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="prev-page-btn">&larr; previous</a>
-        {% endif %}
+    {% include 'notes/partials/list_entries.html' %}
+{% endblock %}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="next-page-btn">next &rarr;</a>
-        {% endif %}
-    </div>
+{% block scripts %}
+    <script src="{% static 'js/htmx.min.js' %}"></script>
 {% endblock %}
