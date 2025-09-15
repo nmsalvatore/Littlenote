@@ -14,7 +14,8 @@
         </form>
         {% for entry in journal_entries %}
             <div class="journal-entry">
-                <time datetime="">{{ entry.created_at }}</time>
+                <time datetime="{{ entry.created_at | date:'Y-m-d' }}">{{ entry.created_at | date:"n.j.y" }}</time>
+                <hr>
                 {{ entry.content|linebreaks }}
             </div>
         {% endfor %}
