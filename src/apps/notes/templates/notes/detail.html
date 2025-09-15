@@ -19,7 +19,7 @@
                 <h1 class="note-title">{{ note.title }}</h1>
             {% endif %}
             <div class="note-settings">
-                <time datetime="">{{ note.created_at }}</time>
+                <time datetime="{{ note.created_at | date:'Y-m-d' }}">{{ note.created_at }}</time>
                 <details class="more-options">
                     <summary class="more-options-icon">&vellip;</summary>
                     <menu>
