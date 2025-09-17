@@ -5,8 +5,9 @@
     --color-lighter: hsl(60 10% 88%);
     --color-bg: hsl(60 12% 92%);
     --color-primary: hsl(150 15% 20%);
-    --color-dull: hsl(150 5% 50%);
-    --color-action: hsl(150 15% 48%);
+    --color-secondary: hsl(150 5% 27%);
+    --color-dull: hsl(150 5% 55%);
+    --color-action: hsl(150 15% 45%);
 
     /* spacing */
     --spacing-xs: 1ch;
@@ -19,8 +20,8 @@
 html {
     background: var(--color-bg);
     color: var(--color-primary);
-    font-family: ui-monospace, monospace;
-    font-size: 15px;
+    font-family: monospace;
+    font-size: 16px;
 }
 
 /* sections */
@@ -30,7 +31,6 @@ body {
     flex-direction: column;
     min-height: 100dvh;
     line-height: 1.7;
-    letter-spacing: -0.03rem;
 }
 
 body > header,
@@ -52,7 +52,7 @@ body > footer {
 body > header {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     padding-bottom: var(--spacing-lg);
     padding-top: var(--spacing-xl);
 }
@@ -99,6 +99,9 @@ h3,
 h4,
 h5,
 h6 {
+    color: var(--color-primary);
+    letter-spacing: -0.05rem;
+    line-height: 1.5;
     margin-bottom: var(--spacing-sm);
 }
 
@@ -112,13 +115,11 @@ p:last-child {
 
 a {
     color: inherit;
-    text-underline-offset: 4px;
-    text-decoration-style: dotted;
-    text-decoration-color: var(--color-action);
 }
 
 time {
     color: var(--color-dull);
+    font-size: 0.9rem;
 }
 
 *::placeholder {

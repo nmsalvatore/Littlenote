@@ -16,7 +16,7 @@ ul.note-list > li a {
 }
 
 ul.note-list > li time {
-    width: 10ch;
+    font-size: inherit;
 }
 
 div.actions {

@@ -1,6 +1,7 @@
 .note-detail {
     background: var(--color-lighter);
     border-radius: 4px;
+    color: var(--color-secondary);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
@@ -23,6 +24,7 @@
 .note-content h4,
 .note-content h5,
 .note-content h6 {
+    color: var(--color-primary);
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
 }
@@ -40,10 +42,14 @@
     margin-top: 0;
 }
 
+.note-content > ul,
+.note-content > ol {
+    margin-bottom: var(--spacing-sm);
+}
+
 .note-content ol,
 .note-content ul {
     padding-left: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
 }
 
 .note-content hr {
@@ -117,7 +123,6 @@
     width: max-content;
     right: 1rem;
     box-shadow: 0 1px 8px -2px;
-    font-weight: 600;
 }
 
 .more-options menu li {

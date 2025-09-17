@@ -47,30 +47,25 @@ body > header a .text {
 
 body > header > nav {
     display: flex;
+    gap: var(--spacing-xs);
     text-transform: lowercase;
 }
 
 .nav-item {
     color: var(--color-dull);
     display: inline-flex;
+    font-weight: 600;
 }
 
 .nav-item.active > a {
+    background: var(--color-lighter);
+    border-radius: 1ch;
     color: var(--color-primary);
-    text-decoration: underline;
-    text-underline-offset: var(--spacing-xs);
-    text-decoration-thickness: 1px;
-    text-decoration-style: double;
-    font-weight: 600;
 }
 
 .nav-item > a {
     color: inherit;
-}
-
-.nav-item:not(.nav-item:last-child)::after {
-    content: "/";
-    padding: 0 1ch;
+    padding: 6px 12px;
 }
 
 /* app-level code styles */
@@ -132,5 +127,5 @@ form:has(textarea[name="content"]) > button[type="submit"] {
     background: var(--color-action);
     border-radius: 6px;
     border: 2px solid var(--color-light);
-    padding: 6px 16px;
+    padding: 5px 16px;
 }

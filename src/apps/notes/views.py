@@ -13,6 +13,7 @@ class NotesListView(LoginRequiredMixin, ListView):
     """
     View for the notes list page.
     """
+
     model = Note
     context_object_name = "notes"
     redirect_field_name = None
@@ -29,8 +30,7 @@ class NotesListView(LoginRequiredMixin, ListView):
 
         if query:
             queryset = queryset.filter(
-                Q(title__icontains=query) |
-                Q(content__icontains=query)
+                Q(title__icontains=query) | Q(content__icontains=query)
             )
 
         return queryset
@@ -40,6 +40,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     """
     View for the new note page.
     """
+
     model = Note
     fields = ["title", "content"]
     template_name = "notes/new.html"
@@ -55,6 +56,7 @@ class NoteDeleteView(LoginRequiredMixin, DeleteView):
     """
     View for note deletion.
     """
+
     model = Note
     success_url = reverse_lazy("notes:list")
     template_name = "notes/delete.html"
@@ -73,6 +75,7 @@ class NoteDetailView(LoginRequiredMixin, DetailView):
     """
     View for a single note.
     """
+
     model = Note
     template_name = "notes/detail.html"
     redirect_field_name = None
@@ -90,12 +93,12 @@ class NoteEditView(LoginRequiredMixin, UpdateView):
     """
     View for note edit page.
     """
+
     model = Note
     fields = ["title", "content"]
     template_name = "notes/edit.html"
     context_object_name = "note"
     redirect_field_name = None
-    success_url = reverse_lazy("notes:list")
 
     def get_object(self, queryset=None):
         note = super().get_object(queryset)
@@ -104,3 +107,6 @@ class NoteEditView(LoginRequiredMixin, UpdateView):
             raise Http404
 
         return note
+
+    def get_success_url(self):
+        return reverse_lazy("notes:detail", args=[self.object.id])
