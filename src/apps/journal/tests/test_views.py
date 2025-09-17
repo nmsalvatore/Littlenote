@@ -47,3 +47,11 @@ class JournalEntryListViewTests(LiveServerTestCase):
         })
         response = self.client.get(self.journal_url)
         self.assertIn("Stuff is weird", response.text)
+
+    def test_journal_redirects_unauthenticated_users(self):
+        """
+        That that unauthenticated users going to the /journal route are
+        redirected to the front page.
+        """
+        response = self.client.get(self.journal_url)
+        self.assertRedirects(response, "/")
