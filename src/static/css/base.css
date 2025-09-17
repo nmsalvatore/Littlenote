@@ -119,7 +119,6 @@ a {
 
 time {
     color: var(--color-dull);
-    font-size: 0.9rem;
 }
 
 *::placeholder {

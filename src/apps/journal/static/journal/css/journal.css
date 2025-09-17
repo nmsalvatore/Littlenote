@@ -18,7 +18,3 @@ form > button[type="submit"] {
     border-radius: 6px;
     padding: var(--spacing-sm);
 }
-
-.journal-entry time {
-    font-size: 0.9rem;
-}
