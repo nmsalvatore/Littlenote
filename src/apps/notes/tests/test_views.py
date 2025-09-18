@@ -246,17 +246,18 @@ class NoteEditTests(NoteTestCase):
         response = self.client.get(self.note_edit_url)
         self.assertEqual(response.status_code, 404)
 
-    def test_note_edit_submission_redirects_to_list(self):
+    def test_note_edit_submission_redirects_to_detail(self):
         """
         Test that submission of updated note redirects the user to the
-        note list.
+        updated note detail view.
         """
         self.client.force_login(self.test_user)
         response = self.client.post(self.note_edit_url, {
             "title": "Hello Littlenote!",
             "content": "It's a beautiful day!"
         })
-        self.assertRedirects(response, "/notes/")
+        note = Note.objects.filter(title="Hello Littlenote!").first()
+        self.assertRedirects(response, f"/notes/{note.id}/")
 
     def test_note_edit_updates_note(self):
         """
