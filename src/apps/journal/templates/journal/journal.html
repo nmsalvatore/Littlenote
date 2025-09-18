@@ -1,5 +1,6 @@
 {% extends 'app.html' %}
 {% load static %}
+{% load markdown_extras %}
 
 {% block app_stylesheets %}
     <link rel="stylesheet" href="{% static 'journal/css/journal.css' %}">
@@ -12,10 +13,13 @@
             <textarea name="content" id="journal_entry" placeholder="What's on your mind?"></textarea>
             <button type="submit">Submit</button>
         </form>
+
         {% for entry in journal_entries %}
             <div class="journal-entry">
                 <time datetime="{{ entry.created_at | date:'Y-m-d' }}">{{ entry.created_at }}</time>
-                {{ entry.content|linebreaks }}
+                <div>
+                    {{ entry.content | markdown | safe }}
+                </div>
             </div>
         {% endfor %}
     </div>

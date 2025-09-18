@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "src.apps.accounts",
+    "src.apps.common",
     "src.apps.journal",
     "src.apps.notes",
     "src.apps.pages",
