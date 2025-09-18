@@ -1,5 +1,6 @@
 .note-detail {
     background: var(--color-lighter);
+    border: 1px solid var(--color-light);
     border-radius: 4px;
     color: var(--color-secondary);
     display: flex;
@@ -24,7 +25,6 @@
 .note-content h4,
 .note-content h5,
 .note-content h6 {
-    color: var(--color-primary);
     margin-top: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
 }
@@ -114,6 +114,7 @@
 .more-options menu {
     display: flex;
     flex-direction: column;
+    font-weight: 600;
     gap: var(--spacing-xs);
     list-style-type: none;
     position: absolute;

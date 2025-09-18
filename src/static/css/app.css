@@ -52,19 +52,19 @@ body > header > nav {
 }
 
 .nav-item {
-    color: var(--color-dull);
     display: inline-flex;
-    font-weight: 600;
 }
 
 .nav-item.active > a {
-    background: var(--color-lighter);
-    border-radius: 1ch;
-    color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-whitish);
 }
 
 .nav-item > a {
-    color: inherit;
+    background: var(--color-lighter);
+    border-radius: 1ch;
+    color: var(--color-primary);
+    font-weight: 500;
     padding: 6px 12px;
 }
 
@@ -128,4 +128,9 @@ form:has(textarea[name="content"]) > button[type="submit"] {
     border-radius: 6px;
     border: 2px solid var(--color-light);
     padding: 5px 16px;
+}
+
+button,
+.btn {
+    font-weight: 500;
 }

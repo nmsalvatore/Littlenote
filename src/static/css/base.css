@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+
 :root {
     /* colors */
     --color-whitish: hsl(150 15% 97%);
@@ -6,7 +8,7 @@
     --color-bg: hsl(60 12% 92%);
     --color-primary: hsl(150 15% 20%);
     --color-secondary: hsl(150 5% 27%);
-    --color-dull: hsl(150 5% 55%);
+    --color-dull: hsl(150 5% 50%);
     --color-action: hsl(150 15% 45%);
 
     /* spacing */
@@ -20,7 +22,7 @@
 html {
     background: var(--color-bg);
     color: var(--color-primary);
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
     font-size: 16px;
 }
 
