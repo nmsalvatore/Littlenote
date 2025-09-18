@@ -129,8 +129,3 @@ form:has(textarea[name="content"]) > button[type="submit"] {
     border: 2px solid var(--color-light);
     padding: 5px 16px;
 }
-
-button,
-.btn {
-    font-weight: 500;
-}
