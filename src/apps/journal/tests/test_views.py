@@ -2,7 +2,7 @@
 
 
 from django.contrib.auth import get_user_model
-from django.test import LiveServerTestCase
+from django.test import TestCase
 from django.urls import reverse_lazy
 
 from src.apps.journal.models import JournalEntry
@@ -11,7 +11,7 @@ from src.apps.journal.models import JournalEntry
 User = get_user_model()
 
 
-class JournalEntryListTests(LiveServerTestCase):
+class JournalEntryListTests(TestCase):
     """
     Tests for JournalEntryListView.
     """
@@ -87,7 +87,7 @@ class JournalEntryListTests(LiveServerTestCase):
         self.assertNotIn("Why do I have to be so strange?!", response.text)
 
 
-class JournalEntryCreationTests(LiveServerTestCase):
+class JournalEntryCreationTests(TestCase):
     """
     Test for JournalEntryCreateView.
     """
