@@ -1,12 +1,16 @@
 """Authentication utilities for passwordless login."""
 
+import logging
 import secrets
 import time
 
 from django.conf import settings
 from django.core.mail import send_mail
+import resend
 
 from ..constants import AuthSessionKeys, EmailTemplates, ErrorMessages, AuthConfig
+
+logger = logging.getLogger(__name__)
 
 
 def normalize_email(email):
@@ -26,13 +30,37 @@ def send_passcode_email(email, passcode):
     """
     Send email containing the one-time passcode for login.
     """
-    send_mail(
-        EmailTemplates.SUBJECT.format(passcode=passcode),
-        EmailTemplates.EMAIL.format(passcode=passcode),
-        settings.SERVER_EMAIL,
-        [email],
-        fail_silently=False
-    )
+    if hasattr(settings, 'RESEND_API_KEY') and settings.RESEND_API_KEY:
+        # Use Resend API for production
+        resend.api_key = settings.RESEND_API_KEY
+
+        params = {
+            "from": settings.SERVER_EMAIL,
+            "to": [email],
+            "subject": EmailTemplates.SUBJECT.format(passcode=passcode),
+            "text": EmailTemplates.EMAIL.format(passcode=passcode),
+        }
+
+        try:
+            resend.Emails.send(params)
+        except Exception as e:
+            # Fallback to SMTP if Resend fails
+            send_mail(
+                EmailTemplates.SUBJECT.format(passcode=passcode),
+                EmailTemplates.EMAIL.format(passcode=passcode),
+                settings.SERVER_EMAIL,
+                [email],
+                fail_silently=False
+            )
+    else:
+        # Use SMTP for development/local
+        send_mail(
+            EmailTemplates.SUBJECT.format(passcode=passcode),
+            EmailTemplates.EMAIL.format(passcode=passcode),
+            settings.SERVER_EMAIL,
+            [email],
+            fail_silently=False
+        )
 
 def set_passcode_session(request, email, code):
     """

@@ -50,8 +50,13 @@ DATABASES = {
 # ------------------------------------------------------------------------------
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-RESEND_SMTP_PORT = 587
-RESEND_SMTP_USERNAME = "resend"
-RESEND_SMTP_HOST = "smtp.resend.com"
-DEFAULT_FROM_EMAIL = "noreply@littlenote.local"
+EMAIL_HOST = "smtp.resend.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "resend"
+EMAIL_HOST_PASSWORD = config("RESEND_API_KEY")
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="onboarding@resend.dev")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Resend API configuration
+RESEND_API_KEY = config("RESEND_API_KEY")
