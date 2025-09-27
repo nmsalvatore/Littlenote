@@ -2,15 +2,11 @@
 
 from pathlib import Path
 
-from environs import env
+from decouple import config
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SRC_DIR = BASE_DIR / "src"
-
-READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", False)
-if READ_DOT_ENV_FILE:
-    env.read_env(BASE_DIR / ".env")
 
 
 # Context
@@ -22,7 +18,7 @@ SITE_TITLE = "Littlenote"
 # General
 # ------------------------------------------------------------------------------
 
-DEBUG = env.bool("DJANGO_DEBUG", False)
+DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
@@ -127,3 +123,12 @@ AUTH_PASSWORD_VALIDATORS = [
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [SRC_DIR / "static"]
+
+
+#  Email
+# ------------------------------------------------------------------------------
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+RESEND_SMTP_PORT = 587
+RESEND_SMTP_USERNAME = "resend"
+RESEND_SMTP_HOST = "smtp.resend.com"
