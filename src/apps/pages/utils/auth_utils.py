@@ -5,6 +5,7 @@ import time
 
 from django.conf import settings
 from django.core.mail import send_mail
+import resend
 
 from ..constants import AuthSessionKeys, EmailTemplates, ErrorMessages, AuthConfig
 
@@ -26,22 +27,33 @@ def send_passcode_email(email, passcode):
     """
     Send email containing the one-time passcode for login.
     """
-    send_mail(
-        EmailTemplates.SUBJECT.format(passcode=passcode),
-        EmailTemplates.EMAIL.format(passcode=passcode),
-        settings.SERVER_EMAIL,
-        [email],
-        fail_silently=False
-    )
+    subject = EmailTemplates.SUBJECT.format(passcode=passcode)
+    message = EmailTemplates.EMAIL.format(passcode=passcode)
+
+    if hasattr(settings, 'RESEND_API_KEY') and getattr(settings, 'RESEND_API_KEY'):
+        try:
+            resend.api_key = settings.RESEND_API_KEY
+            resend.Emails.send({
+                "from": settings.SERVER_EMAIL,
+                "to": [email],
+                "subject": subject,
+                "text": message,
+            })
+        except Exception:
+            # Fallback to SMTP if Resend fails
+            send_mail(subject, message, settings.SERVER_EMAIL, [email], fail_silently=False)
+    else:
+        # Use SMTP for development/local
+        send_mail(subject, message, settings.SERVER_EMAIL, [email], fail_silently=False)
 
 def set_passcode_session(request, email, code):
     """
     Set the passcode session data.
     """
     request.session[AuthSessionKeys.PASSCODE] = {
-        "code": code,
-        "email": email,
-        "expires_at": time.perf_counter() + AuthConfig.PASSCODE_LIFETIME
+        AuthSessionKeys.PASSCODE_CODE: code,
+        AuthSessionKeys.PASSCODE_EMAIL: email,
+        AuthSessionKeys.PASSCODE_EXPIRATION: time.perf_counter() + AuthConfig.PASSCODE_LIFETIME
     }
 
 def delete_passcode_session_data(request):
@@ -59,6 +71,10 @@ def validate_passcode_session(request, user_email, user_passcode):
 
     if not passcode_data:
         return False, ErrorMessages.EXPIRED_SESSION, True
+
+    # Handle cases where session data might be corrupted or wrong type
+    if not isinstance(passcode_data, dict):
+        return False, ErrorMessages.INVALID_SESSION, True
 
     saved_passcode = passcode_data.get(AuthSessionKeys.PASSCODE_CODE)
     saved_email = passcode_data.get(AuthSessionKeys.PASSCODE_EMAIL)

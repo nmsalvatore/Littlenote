@@ -126,6 +126,6 @@ form:has(textarea[name="content"]) > button[type="submit"] {
     cursor: pointer;
     background: var(--color-action);
     border-radius: 6px;
-    border: 2px solid var(--color-light);
+    border: 1px solid var(--color-light);
     padding: 5px 16px;
 }

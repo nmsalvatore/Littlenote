@@ -34,19 +34,12 @@ class FrontPageView(TemplateView):
             return redirect("notes:list")
         return super().dispatch(request, *args, **kwargs)
 
-    @method_decorator(ratelimit(
-        key="ip",
-        rate=AuthConfig.GENERAL_RATE_LIMIT,
-        method="POST",
-        block=True
-    ))
+    @method_decorator(ratelimit(key="ip", rate=AuthConfig.GENERAL_RATE_LIMIT, method="POST", block=True))
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests from the home page.
-        """
+        """Handle POST requests from the home page."""
         try:
-            user_email = normalize_email(request.POST.get("email"))
-            user_passcode = request.POST.get("passcode")
+            user_email = normalize_email(request.POST.get("email", ""))
+            user_passcode = request.POST.get("passcode", "")
 
             try:
                 validate_email(user_email)
@@ -54,31 +47,24 @@ class FrontPageView(TemplateView):
                 messages.error(request, ErrorMessages.INVALID_EMAIL)
                 return self._render_email_form(request)
 
-            if user_email and not user_passcode:
-                return self._handle_email_submission(request, user_email)
-
-            elif user_email and user_passcode:
+            if user_passcode:
                 return self._handle_passcode_submission(request, user_email, user_passcode)
+            else:
+                return self._handle_email_submission(request, user_email)
 
         except Ratelimited:
             messages.error(request, ErrorMessages.TOO_MANY_LOGIN_ATTEMPTS)
             return self._render_email_form(request)
 
 
-    @method_decorator(ratelimit(
-        key="post:email",
-        rate=AuthConfig.EMAIL_REQUEST_RATE_LIMIT,
-        method="POST",
-        block=True
-    ))
+    @method_decorator(ratelimit(key="post:email", rate=AuthConfig.EMAIL_REQUEST_RATE_LIMIT, method="POST", block=True))
     def _handle_email_submission(self, request, user_email):
-        """
-        Handle email submission and send passcode to user.
-        """
+        """Handle email submission and send passcode to user."""
         try:
-            context = {"email": user_email}
-            user = User.objects.filter(email=user_email)
-            context["user_has_account"] = user.exists()
+            context = {
+                "email": user_email,
+                "user_has_account": User.objects.filter(email=user_email).exists()
+            }
 
             passcode = generate_passcode()
             set_passcode_session(request, user_email, passcode)
@@ -91,20 +77,11 @@ class FrontPageView(TemplateView):
             return self._render_email_form(request)
 
 
-    @method_decorator(ratelimit(
-        key="post:email",
-        rate=AuthConfig.PASSCODE_ATTEMPT_RATE_LIMIT,
-        method="POST",
-        block=True
-    ))
+    @method_decorator(ratelimit(key="post:email", rate=AuthConfig.PASSCODE_ATTEMPT_RATE_LIMIT, method="POST", block=True))
     def _handle_passcode_submission(self, request, user_email, user_passcode):
-        """
-        Handle passcode submission and authentication.
-        """
+        """Handle passcode submission and authentication."""
         try:
-            is_valid, message, should_reset = (
-                validate_passcode_session(request, user_email, user_passcode)
-            )
+            is_valid, message, should_reset = validate_passcode_session(request, user_email, user_passcode)
 
             if not is_valid:
                 messages.error(request, message)
@@ -116,62 +93,46 @@ class FrontPageView(TemplateView):
 
             login(request, user)
             delete_passcode_session_data(request)
-            self._welcome_new_user(request, user_is_new)
 
+            if user_is_new:
+                messages.success(request, SuccessMessages.WELCOME_NEW_USER)
+
+            redirect_url = reverse("notes:list")
             if request.headers.get("HX-Request"):
                 response = HttpResponse()
-                response["HX-Redirect"] = reverse("notes:list")
+                response["HX-Redirect"] = redirect_url
                 return response
 
-            return redirect(reverse("notes:list"))
+            return redirect(redirect_url)
 
         except Ratelimited:
             messages.error(request, ErrorMessages.TOO_MANY_PASSCODE_ATTEMPTS)
-            context = {"email": user_email}
-            return self._render_passcode_form(request, context)
-
-    def _welcome_new_user(self, request, user_is_new):
-        """
-        Welcome new users with a little welcome message.
-        """
-        if user_is_new:
-            messages.success(request, SuccessMessages.WELCOME_NEW_USER)
+            return self._render_passcode_form(request, {"email": user_email})
 
     def _handle_form_reset(self, request, should_reset, user_email):
-        """
-        Handle form reset when passcode session data is invalid.
-        """
+        """Handle form reset when passcode session data is invalid."""
         if should_reset:
             delete_passcode_session_data(request)
             return self._render_email_form(request)
-        else:
-            user = User.objects.filter(email=user_email)
-            context = {"email": user_email, "user_has_account": user.exists()}
-            return self._render_passcode_form(request, context)
 
-    def _render_email_form(self, request, context={}):
-        """
-        Handle email form render based on whether the request includes
-        an HX-Request header.
-        """
-        if request.headers.get("HX-Request"):
-            template_name = TemplatePaths.EMAIL_FORM
-        else:
-            template_name = TemplatePaths.FRONT_PAGE
+        context = {
+            "email": user_email,
+            "user_has_account": User.objects.filter(email=user_email).exists()
+        }
+        return self._render_passcode_form(request, context)
 
+    def _render_email_form(self, request, context=None):
+        """Render email form based on request type."""
+        context = context or {}
         context["passcode_sent"] = False
+
+        template_name = TemplatePaths.EMAIL_FORM if request.headers.get("HX-Request") else TemplatePaths.FRONT_PAGE
         return render(request, template_name, context)
 
-
-    def _render_passcode_form(self, request, context={}):
-        """
-        Handle passcode form render based on whether the request
-        includes an HX-Request header.
-        """
-        if request.headers.get("HX-Request"):
-            template_name = TemplatePaths.PASSCODE_FORM
-        else:
-            template_name = TemplatePaths.FRONT_PAGE
-
+    def _render_passcode_form(self, request, context=None):
+        """Render passcode form based on request type."""
+        context = context or {}
         context["passcode_sent"] = True
+
+        template_name = TemplatePaths.PASSCODE_FORM if request.headers.get("HX-Request") else TemplatePaths.FRONT_PAGE
         return render(request, template_name, context)

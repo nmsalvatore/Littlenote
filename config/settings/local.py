@@ -1,7 +1,6 @@
 """Local project settings."""
 
 from .base import *
-from .base import env
 
 from decouple import config
 
@@ -10,8 +9,8 @@ from decouple import config
 # ------------------------------------------------------------------------------
 
 DEBUG = True
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-SECRET_KEY = env("DJANGO_SECRET_KEY", "shhh")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+SECRET_KEY = config("DJANGO_SECRET_KEY", default="shhh")
 
 #  Databases
 # ------------------------------------------------------------------------------

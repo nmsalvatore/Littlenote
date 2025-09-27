@@ -5,61 +5,48 @@ import time
 from django.contrib.auth import get_user, get_user_model
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.urls.base import reverse
+from django.urls import reverse
 
-from src.apps.pages.constants import AuthSessionKeys, ErrorMessages
+from src.apps.pages.constants import AuthSessionKeys, ErrorMessages, SuccessMessages
 
 
 User = get_user_model()
 
 
 class AuthTestCase(TestCase):
-    """
-    Extended TestCase class that includes helper functions for auth
-    flow integration tests.
-    """
+    """Base test case with helper methods for auth flow testing."""
 
-    def __init__(self, *args, **kwargs):
-        self.front_page_url = reverse("pages:front")
-        return super().__init__(*args, *kwargs)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.front_page_url = reverse("pages:front")
+
+    def setUp(self):
+        super().setUp()
+        # Use client without CSRF checks for auth flow testing
+        from django.test.client import Client
+        self.client = Client(enforce_csrf_checks=False)
 
     def _submit_email(self, email):
-        """
-        Submit the user email to the form.
-        """
-        return self.client.post(self.front_page_url, {
-            "email": email
-        })
+        """Submit the user email to the form."""
+        return self.client.post(self.front_page_url, {"email": email})
 
     def _get_correct_passcode(self):
-        """
-        Get the correct passcode from the session data.
-        """
+        """Get the correct passcode from the session data."""
         passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
         return passcode_data[AuthSessionKeys.PASSCODE_CODE]
 
     def _generate_incorrect_passcode(self):
-        """
-        Generate a purposefully incorrect passcode by flipping the last
-        digit of the correct passcode.
-        """
+        """Generate an incorrect passcode by flipping the last digit."""
         passcode = self._get_correct_passcode()
-        return passcode[:-1] + "0" if passcode[-1] != "0" else "1"
+        return passcode[:-1] + ("0" if passcode[-1] != "0" else "1")
 
     def _submit_passcode(self, email, passcode):
-        """
-        Submit the passcode to the form.
-        """
-        return self.client.post(self.front_page_url, {
-            "email": email,
-            "passcode": passcode
-        })
+        """Submit the passcode to the form."""
+        return self.client.post(self.front_page_url, {"email": email, "passcode": passcode})
 
     def _expire_passcode(self):
-        """
-        Force passcode expiration by setting PASSCODE_EXPIRATION to
-        10 seconds in the past.
-        """
+        """Force passcode expiration by setting expiration time in the past."""
         passcode_data = self.client.session[AuthSessionKeys.PASSCODE]
         passcode_data[AuthSessionKeys.PASSCODE_EXPIRATION] = time.perf_counter() - 10
 
@@ -68,10 +55,7 @@ class AuthTestCase(TestCase):
         session.save()
 
     def _expire_session(self):
-        """
-        Force session to expire my deleting the passcode key from the
-        session data.
-        """
+        """Force session to expire by deleting the passcode key."""
         session = self.client.session
         del session[AuthSessionKeys.PASSCODE]
         session.save()
